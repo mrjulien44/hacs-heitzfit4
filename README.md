@@ -4,7 +4,7 @@
 
 ### Using HACS
 
-[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=delphiki&repository=hass-heitzfit4&category=integration)
+[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=mrjulien44s&repository=hass-heitzfit4&category=integration)
 
 OR
 
@@ -37,17 +37,17 @@ This integration provides several sensors, always prefixed with `heitzfit4_LASTN
 
 | Sensor | Description |
 |--------|-------------|
-| `sensor.heitzfit4_LASTNAME_FIRSTNAME` | basic informations about your child |
-| `[...]_timetable_today` | today's timetable |
-| `[...]_timetable_tomorrow` | tomorrow's timetable |
-| `[...]_timetable_next_day` | next school day timetable |
-| `[...]_timetable_period` | timetable for next 15 days |
-| `[...]_timetable_ical_url` | iCal URL for the timetable (if available) |
-| `[...]_reservation` | reservation |
-| `[...]_reservation_period` | reservation for max 6 days |
+| `sensor.heitzfit4_LASTNAME_FIRSTNAME` | basic informations about you |
+| `sensor.heitzfit4_timetable_today` | today's timetable |
+| `sensor.heitzfit4_timetable_tomorrow` | tomorrow's timetable |
+| `sensor.heitzfit4_timetable_next_day` | next school day timetable |
+| `sensor.heitzfit4_timetable_period` | timetable for next 15 days |
+| `sensor.heitzfit4_timetable_ical_url` | iCal URL for the timetable (if available) |
+| `sensor.heitzfit4_reservation` | reservation |
+| `sensor.heitzfit4_reservation_period` | reservation for max 6 days |
 
 The sensors are updated every 15 minutes.
 
 ## Cards
 
-Cards are available here: https://github.com/delphiki/lovelace-heitzfit4
+Cards are available here: https://github.com/mrjulien44/lovelace-heitzfit4

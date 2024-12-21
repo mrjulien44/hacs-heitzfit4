@@ -2,7 +2,7 @@
 
 from homeassistant.const import Platform
 
-DOMAIN = "heitzfit4"
+DOMAIN = "hass-heitzfit4"
 EVENT_TYPE = "heitzfit4_event"
 
 LESSON_MAX_DAYS = 6

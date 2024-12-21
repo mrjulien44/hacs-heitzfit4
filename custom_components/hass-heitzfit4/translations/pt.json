@@ -9,17 +9,6 @@
             "unknown": "Erro inesperado"
         },
         "step": {
-            "parent": {
-                "data": {
-                    "child": "Filho"
-                }
-            },
-            "user": {
-                "data": {
-                    "connection_type": "Tipo de ...",
-                    "account_type": "Tipo de Conta"
-                }
-            },
 			"username_password_login": {
                 "data": {
                     "ent": "ENT",
@@ -29,13 +18,6 @@
                     "device_name": "Nome do dispositivo",
                     "account_pin": "PIN da conta"
                 }
-            },
-			"qr_code_login": {
-                "data": {
-					"qr_code_json": "JSON version of QR",
-                    "qr_code_pin": "Pin code"
-                },
-				"description": "JSON of QR Code"
             }
         }
     }
