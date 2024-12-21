@@ -9,7 +9,7 @@ from zoneinfo import ZoneInfo
 
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from .coordinator import heitzfit4DataUpdateCoordinator
-from .heitzfit4_formatter import format_displayed_lesson
+from .heitzfit4_formatter import format_displayed_activity
 
 from .const import DOMAIN
 
@@ -30,20 +30,20 @@ async def async_setup_entry(
 
 
 @callback
-def async_get_calendar_event_from_lessons(lesson, timezone) -> CalendarEvent:
-    """Get a HASS CalendarEvent from a heitzfit4 Lesson."""
+def async_get_calendar_event_from_activitys(activity, timezone) -> CalendarEvent:
+    """Get a HASS CalendarEvent from a heitzfit4 activity."""
     tz = ZoneInfo(timezone)
 
-    lesson_name = format_displayed_lesson(lesson)
-    if lesson.canceled:
-        lesson_name = f"Annulé - {lesson_name}"
+    activity_name = format_displayed_activity(activity)
+     if activity.deleted:
+         activity_name = f"Annulé - {activity_name}"
 
     return CalendarEvent(
-        summary=lesson_name,
-        description=f"{lesson.teacher_name} - Salle {lesson.classroom}",
-        location=f"Salle {lesson.classroom}",
-        start=lesson.start.replace(tzinfo=tz),
-        end=lesson.end.replace(tzinfo=tz),
+        summary=activity_name,
+        # description=f"{activity.teacher_name} - Salle {activity.classroom}",
+        # location=f"Salle {activity.classroom}",
+        start=activity.start.replace(tzinfo=tz),
+        end=activity.end.replace(tzinfo=tz),
     )
 
 
@@ -58,23 +58,27 @@ class heitzfit4Calendar(CoordinatorEntity, CalendarEntity):
         super().__init__(coordinator, entry)
 
         child_info = coordinator.data["child_info"]
-        calendar_name = child_info.name
-        nickname = self.coordinator.config_entry.options.get("nickname", "")
-        if nickname != "":
-            calendar_name = nickname
+        calendar_name = "sport"
+        # calendar_name = child_info.name
+        # nickname = self.coordinator.config_entry.options.get("nickname", "")
+        # if nickname != "":
+        #     calendar_name = nickname
 
         self._attr_translation_key = "timetable"
-        self._attr_translation_placeholders = {"child": calendar_name}
+        # self._attr_translation_placeholders = {"child": calendar_name}
         self._attr_unique_id = f"{coordinator.data['sensor_prefix']}-timetable"
         self._attr_name = f"Planning de {calendar_name}"
         self._attr_device_info = DeviceInfo(
-            name=f"heitzfit4 - {self.coordinator.data['child_info'].name}",
+            name=f"heitzfit4 - {self.coordinator.data.name}",
+            # name=f"heitzfit4 - {self.coordinator.data['child_info'].name}",
             entry_type=DeviceEntryType.SERVICE,
             identifiers={
-                (DOMAIN, f"heitzfit4 - {self.coordinator.data['child_info'].name}")
+                (DOMAIN, f"heitzfit4 - {self.coordinator.data.name}")
+                # (DOMAIN, f"heitzfit4 - {self.coordinator.data['child_info'].name}")
             },
             manufacturer="heitzfit4",
-            model=self.coordinator.data["child_info"].name,
+            model=self.coordinator.data.name,
+            # model=self.coordinator.data["child_info"].name,
         )
         self._event: CalendarEvent | None = None
 
@@ -87,18 +91,18 @@ class heitzfit4Calendar(CoordinatorEntity, CalendarEntity):
     def _handle_coordinator_update(self) -> None:
         """Handle updated data from the coordinator."""
         try:
-            lessons = self.coordinator.data["lessons_period"]
-            if lessons is None:
+            activitys = self.coordinator.data["activitys_period"]
+            if activitys is None:
                 return None
 
             now = datetime.now()
             current_event = next(
-                event for event in lessons if event.start >= now and now < event.end
+                event for event in activitys if event.start >= now and now < event.end
             )
         except StopIteration:
             self._event = None
         else:
-            self._event = async_get_calendar_event_from_lessons(
+            self._event = async_get_calendar_event_from_activitys(
                 current_event, self.hass.config.time_zone
             )
 
@@ -112,9 +116,9 @@ class heitzfit4Calendar(CoordinatorEntity, CalendarEntity):
     ) -> list[CalendarEvent]:
         """Return calendar events within a datetime range."""
         return [
-            async_get_calendar_event_from_lessons(event, hass.config.time_zone)
+            async_get_calendar_event_from_activitys(event, hass.config.time_zone)
             for event in filter(
-                lambda lesson: lesson.canceled == False,
-                self.coordinator.data["lessons_period"],
+                lambda activity: activity.canceled == False,
+                self.coordinator.data["activitys_period"],
             )
         ]

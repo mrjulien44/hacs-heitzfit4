@@ -56,14 +56,14 @@ from .const import (
 _LOGGER = logging.getLogger(__name__)
 
 
-def get_ent_list() -> dict[str]:
-    ent_functions = dir(heitzfit4py.ent)
-    ent = []
-    for func in ent_functions:
-        if func.startswith("__") or func in ["ent", "complex_ent", "generic_func"]:
-            continue
-        ent.append(func)
-    return ent
+# def get_ent_list() -> dict[str]:
+#     ent_functions = dir(heitzfit4py.ent)
+#     ent = []
+#     for func in ent_functions:
+#         if func.startswith("__") or func in ["ent", "complex_ent", "generic_func"]:
+#             continue
+#         ent.append(func)
+#     return ent
 
 
 # STEP_USER_CONNECTION_TYPE = vol.Schema(

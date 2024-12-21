@@ -61,13 +61,13 @@ def get_client_from_username_password(
             heitzfit4_url=url,
             # username=data["username"],
             # password=data["password"],
-            account_pin=data.get("account_pin", None),
-            device_name=data.get("device_name", None),
+            # account_pin=data.get("account_pin", None),
+            # device_name=data.get("device_name", None),
             client_identifier=data.get("clientId", None),
-            ent=ent,
+            # ent=ent,
         )
-        del ent
-        del client.account_pin
+        # del ent
+        # del client.account_pin
         _LOGGER.info(client.info.name)
     except Exception as err:
         _LOGGER.critical(err)
