@@ -1,4 +1,4 @@
-"""The Pronote integration."""
+"""The heitzfit4 integration."""
 
 from __future__ import annotations
 
@@ -10,7 +10,7 @@ from datetime import timedelta
 
 import logging
 
-from .coordinator import PronoteDataUpdateCoordinator
+from .coordinator import heitzfit4DataUpdateCoordinator
 
 from .const import DOMAIN, PLATFORMS, DEFAULT_REFRESH_INTERVAL
 
@@ -35,10 +35,10 @@ async def async_migrate_entry(hass, config_entry: ConfigEntry) -> bool:
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
-    """Set up Pronote from a config entry."""
+    """Set up heitzfit4 from a config entry."""
     hass.data.setdefault(DOMAIN, {})
 
-    coordinator = PronoteDataUpdateCoordinator(hass, entry)
+    coordinator = heitzfit4DataUpdateCoordinator(hass, entry)
 
     await coordinator.async_config_entry_first_refresh()
 

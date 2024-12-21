@@ -8,8 +8,8 @@ from homeassistant.util.dt import get_time_zone
 from zoneinfo import ZoneInfo
 
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
-from .coordinator import PronoteDataUpdateCoordinator
-from .pronote_formatter import format_displayed_lesson
+from .coordinator import heitzfit4DataUpdateCoordinator
+from .heitzfit4_formatter import format_displayed_lesson
 
 from .const import DOMAIN
 
@@ -20,18 +20,18 @@ async def async_setup_entry(
     async_add_entities: AddEntitiesCallback,
 ) -> None:
     """Set up ReCollect Waste sensors based on a config entry."""
-    coordinator: PronoteDataUpdateCoordinator = hass.data[DOMAIN][
+    coordinator: heitzfit4DataUpdateCoordinator = hass.data[DOMAIN][
         config_entry.entry_id
     ]["coordinator"]
 
     await coordinator.async_config_entry_first_refresh()
 
-    async_add_entities([PronoteCalendar(coordinator, config_entry)], False)
+    async_add_entities([heitzfit4Calendar(coordinator, config_entry)], False)
 
 
 @callback
 def async_get_calendar_event_from_lessons(lesson, timezone) -> CalendarEvent:
-    """Get a HASS CalendarEvent from a Pronote Lesson."""
+    """Get a HASS CalendarEvent from a heitzfit4 Lesson."""
     tz = ZoneInfo(timezone)
 
     lesson_name = format_displayed_lesson(lesson)
@@ -47,11 +47,11 @@ def async_get_calendar_event_from_lessons(lesson, timezone) -> CalendarEvent:
     )
 
 
-class PronoteCalendar(CoordinatorEntity, CalendarEntity):
+class heitzfit4Calendar(CoordinatorEntity, CalendarEntity):
 
     def __init__(
         self,
-        coordinator: PronoteDataUpdateCoordinator,
+        coordinator: heitzfit4DataUpdateCoordinator,
         entry: ConfigEntry,
     ) -> None:
         """Initialize the ReCollect Waste entity."""
@@ -66,14 +66,14 @@ class PronoteCalendar(CoordinatorEntity, CalendarEntity):
         self._attr_translation_key = "timetable"
         self._attr_translation_placeholders = {"child": calendar_name}
         self._attr_unique_id = f"{coordinator.data['sensor_prefix']}-timetable"
-        self._attr_name = f"Emploi du temps de {calendar_name}"
+        self._attr_name = f"Planning de {calendar_name}"
         self._attr_device_info = DeviceInfo(
-            name=f"Pronote - {self.coordinator.data['child_info'].name}",
+            name=f"heitzfit4 - {self.coordinator.data['child_info'].name}",
             entry_type=DeviceEntryType.SERVICE,
             identifiers={
-                (DOMAIN, f"Pronote - {self.coordinator.data['child_info'].name}")
+                (DOMAIN, f"heitzfit4 - {self.coordinator.data['child_info'].name}")
             },
-            manufacturer="Pronote",
+            manufacturer="heitzfit4",
             model=self.coordinator.data["child_info"].name,
         )
         self._event: CalendarEvent | None = None

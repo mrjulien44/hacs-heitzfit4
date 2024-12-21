@@ -1,15 +1,15 @@
 {
-  "domain": "pronote",
-  "name": "Pronote",
+  "domain": "heitzfit4",
+  "name": "heitzfit4",
   "codeowners": [
-    "@delphiki"
+    "mrjulien44"
   ],
   "config_flow": true,
-  "documentation": "https://github.com/delphiki/hass-pronote",
+  "documentation": "https://github.com/delphiki/hass-heitzfit4",
   "iot_class": "cloud_polling",
-  "issue_tracker": "https://github.com/delphiki/hass-pronote/issues",
+  "issue_tracker": "https://github.com/delphiki/hass-heitzfit4/issues",
   "requirements": [
-    "pronotepy==2.14.1"
+    "heitzfit4py==2.14.1"
   ],
   "version": "0.15.1"
 }

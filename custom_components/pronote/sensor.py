@@ -13,14 +13,14 @@ from homeassistant.helpers.update_coordinator import (
 
 from datetime import datetime
 
-from .coordinator import PronoteDataUpdateCoordinator
-from .pronote_formatter import *
+from .coordinator import heitzfit4DataUpdateCoordinator
+from .heitzfit4_formatter import *
 
 from .const import (
     DOMAIN,
-    GRADES_TO_DISPLAY,
-    EVALUATIONS_TO_DISPLAY,
-    DEFAULT_LUNCH_BREAK_TIME,
+    # GRADES_TO_DISPLAY,
+    # EVALUATIONS_TO_DISPLAY,
+    # DEFAULT_LUNCH_BREAK_TIME,
 )
 
 
@@ -29,54 +29,57 @@ async def async_setup_entry(
     config_entry: ConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ) -> None:
-    coordinator: PronoteDataUpdateCoordinator = hass.data[DOMAIN][
+    coordinator: heitzfit4DataUpdateCoordinator = hass.data[DOMAIN][
         config_entry.entry_id
     ]["coordinator"]
 
     sensors = [
-        PronoteChildSensor(coordinator),
-        PronoteTimetableSensor(coordinator, "today"),
-        PronoteTimetableSensor(coordinator, "tomorrow"),
-        PronoteTimetableSensor(coordinator, "next_day"),
-        PronoteTimetableSensor(coordinator, "period"),
-        PronoteGradesSensor(coordinator),
-        PronoteHomeworkSensor(coordinator, ""),
-        PronoteHomeworkSensor(coordinator, "_period"),
-        PronoteAbsensesSensor(coordinator),
-        PronoteEvaluationsSensor(coordinator),
-        PronoteAveragesSensor(coordinator),
-        PronotePunishmentsSensor(coordinator),
-        PronoteDelaysSensor(coordinator),
-        PronoteInformationAndSurveysSensor(coordinator),
-        PronoteGenericSensor(coordinator, "ical_url", "timetable_ical_url"),
-        PronoteGenericSensor(
+        heitzfit4ChildSensor(coordinator),
+        heitzfit4TimetableSensor(coordinator, "today"),
+        heitzfit4TimetableSensor(coordinator, "tomorrow"),
+        heitzfit4TimetableSensor(coordinator, "next_day"),
+        heitzfit4TimetableSensor(coordinator, "period"),
+        # heitzfit4GradesSensor(coordinator),
+        heitzfit4reservationSensor(coordinator, ""),
+        heitzfit4reservationSensor(coordinator, "_period"),
+        # heitzfit4AbsensesSensor(coordinator),
+        # heitzfit4EvaluationsSensor(coordinator),
+        # heitzfit4AveragesSensor(coordinator),
+        # heitzfit4PunishmentsSensor(coordinator),
+        # heitzfit4DelaysSensor(coordinator),
+        # heitzfit4InformationAndSurveysSensor(coordinator),
+        heitzfit4GenericSensor(coordinator, "ical_url", "timetable_ical_url"),
+        heitzfit4GenericSensor(
             coordinator, "next_alarm", "next_alarm", None, SensorDeviceClass.TIMESTAMP
         ),
-        PronoteMenusSensor(coordinator),
+        heitzfit4MenusSensor(coordinator),
     ]
 
     async_add_entities(sensors, False)
 
 
-class PronoteChildSensor(CoordinatorEntity, SensorEntity):
-    """Representation of a Pronote sensor."""
+class heitzfit4ChildSensor(CoordinatorEntity, SensorEntity):
+    """Representation of a heitzfit4 sensor."""
 
     def __init__(self, coordinator) -> None:
-        """Initialize the Pronote sensor."""
+        """Initialize the heitzfit4 sensor."""
         super().__init__(coordinator)
-        self._child_info = coordinator.data["child_info"]
-        self._account_type = coordinator.data["account_type"]
+        # self._child_info = coordinator.data["child_info"]
+        # self._account_type = coordinator.data["account_type"]
         self._attr_unique_id = (
-            f"pronote-{self.coordinator.data['sensor_prefix']}-identity"
+            f"heitzfit4-{self.coordinator.data['sensor_prefix']}-identity"
         )
         self._attr_device_info = DeviceInfo(
-            name=f"Pronote - {self.coordinator.data['child_info'].name}",
+            # name=f"heitzfit4 - {self.coordinator.data['child_info'].name}",
+            name=f"heitzfit4 - {self.coordinator.data.name}",
             entry_type=DeviceEntryType.SERVICE,
             identifiers={
-                (DOMAIN, f"Pronote - {self.coordinator.data['child_info'].name}")
+                # (DOMAIN, f"heitzfit4 - {self.coordinator.data['child_info'].name}")
+                (DOMAIN, f"heitzfit4 - {self.coordinator.data.name}")
             },
-            manufacturer="Pronote",
-            model=self.coordinator.data["child_info"].name,
+            manufacturer="heitzfit4",
+            model=self.coordinator.data.name,
+            # model=self.coordinator.data["child_info"].name,
         )
 
     @property
@@ -87,23 +90,25 @@ class PronoteChildSensor(CoordinatorEntity, SensorEntity):
     @property
     def native_value(self):
         """Return the state of the sensor."""
-        return self._child_info.name
+        return self.name
+        # return self._child_info.name
 
     @property
     def extra_state_attributes(self):
         """Return the state attributes."""
         return {
-            "full_name": self._child_info.name,
-            "nickname": self.coordinator.config_entry.options.get("nickname"),
-            "class_name": self._child_info.class_name,
-            "establishment": self._child_info.establishment,
-            "via_parent_account": self._account_type == "parent",
+            # "full_name": self._child_info.name,
+            # "nickname": self.coordinator.config_entry.options.get("nickname"),
+            # "class_name": self._child_info.class_name,
+            # "establishment": self._child_info.establishment,
+            # "via_parent_account": self._account_type == "parent",
+            "club": self.coordinator.config_entry.options.get("club"),
             "updated_at": self.coordinator.last_update_success_time,
         }
 
 
-class PronoteGenericSensor(CoordinatorEntity, SensorEntity):
-    """Representation of a Pronote sensor."""
+class heitzfit4GenericSensor(CoordinatorEntity, SensorEntity):
+    """Representation of a heitzfit4 sensor."""
 
     def __init__(
         self,
@@ -113,22 +118,25 @@ class PronoteGenericSensor(CoordinatorEntity, SensorEntity):
         state: str = None,
         device_class: str = None,
     ) -> None:
-        """Initialize the Pronote sensor."""
+        """Initialize the heitzfit4 sensor."""
         super().__init__(coordinator)
         self._coordinator_key = coordinator_key
         self._name = name
         self._state = state
         self._attr_unique_id = (
-            f"pronote-{self.coordinator.data['sensor_prefix']}-{self._name}"
+            f"heitzfit4-{self.coordinator.data['sensor_prefix']}-{self._name}"
         )
         self._attr_device_info = DeviceInfo(
-            name=f"Pronote - {self.coordinator.data['child_info'].name}",
+            name=f"heitzfit4 - {self.coordinator.data.name}",
+            # name=f"heitzfit4 - {self.coordinator.data['child_info'].name}",
             entry_type=DeviceEntryType.SERVICE,
             identifiers={
-                (DOMAIN, f"Pronote - {self.coordinator.data['child_info'].name}")
+                # (DOMAIN, f"heitzfit4 - {self.coordinator.data['child_info'].name}")
+                (DOMAIN, f"heitzfit4 - {self.coordinator.data.name}")
             },
-            manufacturer="Pronote",
-            model=self.coordinator.data["child_info"].name,
+            manufacturer="heitzfit4",
+            model=self.coordinator.data.name,
+            # model=self.coordinator.data["child_info"].name,
         )
         if device_class is not None:
             self._attr_device_class = device_class
@@ -164,107 +172,107 @@ class PronoteGenericSensor(CoordinatorEntity, SensorEntity):
         )
 
 
-class PronoteTimetableSensor(PronoteGenericSensor):
-    """Representation of a Pronote sensor."""
+class heitzfit4TimetableSensor(heitzfit4GenericSensor):
+    """Representation of a heitzfit4 sensor."""
 
-    def __init__(self, coordinator: PronoteDataUpdateCoordinator, suffix: str) -> None:
-        """Initialize the Pronote sensor."""
-        super().__init__(coordinator, "lessons_" + suffix, "timetable_" + suffix, "len")
+    def __init__(self, coordinator: heitzfit4DataUpdateCoordinator, suffix: str) -> None:
+        """Initialize the heitzfit4 sensor."""
+        super().__init__(coordinator, "activitys_" + suffix, "timetable_" + suffix, "len")
         self._suffix = suffix
-        self._lessons = []
+        self._activitys = []
         self._start_at = None
         self._end_at = None
-        self._lunch_break_start_at = None
-        self._lunch_break_end_at = None
+        # self._lunch_break_start_at = None
+        # self._lunch_break_end_at = None
 
     @property
     def extra_state_attributes(self):
         """Return the state attributes."""
-        self._lessons = self.coordinator.data["lessons_" + self._suffix]
+        self._activitys = self.coordinator.data["activitys_" + self._suffix]
         attributes = []
         canceled_counter = None
         single_day = self._suffix in ["today", "tomorrow", "next_day"]
-        lunch_break_time = datetime.strptime(
-            self.coordinator.config_entry.options.get(
-                "lunch_break_time", DEFAULT_LUNCH_BREAK_TIME
-            ),
-            "%H:%M",
-        ).time()
+        # lunch_break_time = datetime.strptime(
+        #     self.coordinator.config_entry.options.get(
+        #         "lunch_break_time", DEFAULT_LUNCH_BREAK_TIME
+        #     ),
+        #     "%H:%M",
+        # ).time()
 
-        if self._lessons is not None:
+        if self._activitys is not None:
             self._start_at = None
             self._end_at = None
-            self._lunch_break_start_at = None
-            self._lunch_break_end_at = None
+            # self._lunch_break_start_at = None
+            # self._lunch_break_end_at = None
             canceled_counter = 0
-            for lesson in self._lessons:
-                index = self._lessons.index(lesson)
+            for activity in self._activitys:
+                index = self._activitys.index(activity)
                 if not (
-                    lesson.start == self._lessons[index - 1].start
-                    and lesson.canceled is True
+                    activity.start == self._activitys[index - 1].start
+                    and activity.canceled is True
                 ):
-                    attributes.append(format_lesson(lesson, lunch_break_time))
-                if lesson.canceled is False and self._start_at is None:
-                    self._start_at = lesson.start
-                if lesson.canceled is True:
+                    attributes.append(format_activity(activity, lunch_break_time))
+                if activity.canceled is False and self._start_at is None:
+                    self._start_at = activity.start
+                if activity.canceled is True:
                     canceled_counter += 1
-                if single_day is True and lesson.canceled is False:
-                    self._end_at = lesson.end
-                    if lesson.end.time() < lunch_break_time:
-                        self._lunch_break_start_at = lesson.end
-                    if (
-                        self._lunch_break_end_at is None
-                        and lesson.start.time() >= lunch_break_time
-                    ):
-                        self._lunch_break_end_at = lesson.start
-            self._lessons = []
+                if single_day is True and activity.canceled is False:
+                    self._end_at = activity.end
+                    # if activity.end.time() < lunch_break_time:
+                    #     self._lunch_break_start_at = activity.end
+                    # if (
+                    #     self._lunch_break_end_at is None
+                    #     and activity.start.time() >= lunch_break_time
+                    # ):
+                    #     self._lunch_break_end_at = activity.start
+            self._activitys = []
 
         result = {
             "updated_at": self.coordinator.last_update_success_time,
-            "lessons": attributes,
-            "canceled_lessons_counter": canceled_counter,
+            "activitys": attributes,
+            "canceled_activitys_counter": canceled_counter,
             "day_start_at": self._start_at,
             "day_end_at": self._end_at,
         }
 
-        if single_day is True:
-            result["lunch_break_start_at"] = self._lunch_break_start_at
-            result["lunch_break_end_at"] = self._lunch_break_end_at
+        # if single_day is True:
+        #     result["lunch_break_start_at"] = self._lunch_break_start_at
+        #     result["lunch_break_end_at"] = self._lunch_break_end_at
 
         return result
 
 
-class PronoteGradesSensor(PronoteGenericSensor):
-    """Representation of a Pronote sensor."""
+# class heitzfit4GradesSensor(heitzfit4GenericSensor):
+#     """Representation of a heitzfit4 sensor."""
 
-    def __init__(self, coordinator: PronoteDataUpdateCoordinator) -> None:
-        """Initialize the Pronote sensor."""
-        super().__init__(coordinator, "grades", "grades", "len")
+#     def __init__(self, coordinator: heitzfit4DataUpdateCoordinator) -> None:
+#         """Initialize the heitzfit4 sensor."""
+#         super().__init__(coordinator, "grades", "grades", "len")
 
-    @property
-    def extra_state_attributes(self):
-        """Return the state attributes."""
-        attributes = []
-        index_note = 0
-        if self.coordinator.data["grades"] is not None:
-            for grade in self.coordinator.data["grades"]:
-                index_note += 1
-                if index_note == GRADES_TO_DISPLAY:
-                    break
-                attributes.append(format_grade(grade))
+#     @property
+#     def extra_state_attributes(self):
+#         """Return the state attributes."""
+#         attributes = []
+#         index_note = 0
+#         if self.coordinator.data["grades"] is not None:
+#             for grade in self.coordinator.data["grades"]:
+#                 index_note += 1
+#                 if index_note == GRADES_TO_DISPLAY:
+#                     break
+#                 attributes.append(format_grade(grade))
 
-        return {
-            "updated_at": self.coordinator.last_update_success_time,
-            "grades": attributes,
-        }
+#         return {
+#             "updated_at": self.coordinator.last_update_success_time,
+#             "grades": attributes,
+#         }
 
 
-class PronoteHomeworkSensor(PronoteGenericSensor):
-    """Representation of a Pronote sensor."""
+class heitzfit4reservationSensor(heitzfit4GenericSensor):
+    """Representation of a heitzfit4 sensor."""
 
-    def __init__(self, coordinator: PronoteDataUpdateCoordinator, suffix: str) -> None:
-        """Initialize the Pronote sensor."""
-        super().__init__(coordinator, "homework" + suffix, "homework" + suffix, "len")
+    def __init__(self, coordinator: heitzfit4DataUpdateCoordinator, suffix: str) -> None:
+        """Initialize the heitzfit4 sensor."""
+        super().__init__(coordinator, "reservation" + suffix, "reservation" + suffix, "len")
         self._suffix = suffix
 
     @property
@@ -272,171 +280,171 @@ class PronoteHomeworkSensor(PronoteGenericSensor):
         """Return the state attributes."""
         attributes = []
         todo_counter = None
-        if self.coordinator.data[f"homework{self._suffix}"] is not None:
+        if self.coordinator.data[f"reservation{self._suffix}"] is not None:
             todo_counter = 0
-            for homework in self.coordinator.data[f"homework{self._suffix}"]:
-                attributes.append(format_homework(homework))
-                if homework.done is False:
+            for reservation in self.coordinator.data[f"reservation{self._suffix}"]:
+                attributes.append(format_reservation(reservation))
+                if reservation.done is False:
                     todo_counter += 1
 
         return {
             "updated_at": self.coordinator.last_update_success_time,
-            "homework": attributes,
+            "reservation": attributes,
             "todo_counter": todo_counter,
         }
 
 
-class PronoteAbsensesSensor(PronoteGenericSensor):
-    """Representation of a Pronote sensor."""
+# class heitzfit4AbsensesSensor(heitzfit4GenericSensor):
+#     """Representation of a heitzfit4 sensor."""
 
-    def __init__(self, coordinator) -> None:
-        """Initialize the Pronote sensor."""
-        super().__init__(coordinator, "absences", "absences", "len")
+#     def __init__(self, coordinator) -> None:
+#         """Initialize the heitzfit4 sensor."""
+#         super().__init__(coordinator, "absences", "absences", "len")
 
-    @property
-    def extra_state_attributes(self):
-        """Return the state attributes."""
-        attributes = []
-        if self.coordinator.data["absences"] is not None:
-            for absence in self.coordinator.data["absences"]:
-                attributes.append(format_absence(absence))
+#     @property
+#     def extra_state_attributes(self):
+#         """Return the state attributes."""
+#         attributes = []
+#         if self.coordinator.data["absences"] is not None:
+#             for absence in self.coordinator.data["absences"]:
+#                 attributes.append(format_absence(absence))
 
-        return {
-            "updated_at": self.coordinator.last_update_success_time,
-            "absences": attributes,
-        }
-
-
-class PronoteDelaysSensor(PronoteGenericSensor):
-    """Representation of a Pronote sensor."""
-
-    def __init__(self, coordinator) -> None:
-        """Initialize the Pronote sensor."""
-        super().__init__(coordinator, "delays", "delays", "len")
-
-    @property
-    def extra_state_attributes(self):
-        """Return the state attributes."""
-        attributes = []
-        if self.coordinator.data["delays"] is not None:
-            for delay in self.coordinator.data["delays"]:
-                attributes.append(format_delay(delay))
-
-        return {
-            "updated_at": self.coordinator.last_update_success_time,
-            "delays": attributes,
-        }
+#         return {
+#             "updated_at": self.coordinator.last_update_success_time,
+#             "absences": attributes,
+#         }
 
 
-class PronoteEvaluationsSensor(PronoteGenericSensor):
-    """Representation of a Pronote sensor."""
+# class heitzfit4DelaysSensor(heitzfit4GenericSensor):
+#     """Representation of a heitzfit4 sensor."""
 
-    def __init__(self, coordinator) -> None:
-        """Initialize the Pronote sensor."""
-        super().__init__(coordinator, "evaluations", "evaluations", "len")
+#     def __init__(self, coordinator) -> None:
+#         """Initialize the heitzfit4 sensor."""
+#         super().__init__(coordinator, "delays", "delays", "len")
 
-    @property
-    def extra_state_attributes(self):
-        """Return the state attributes."""
-        attributes = []
-        index_note = 0
-        if self.coordinator.data["evaluations"] is not None:
-            for evaluation in self.coordinator.data["evaluations"]:
-                index_note += 1
-                if index_note == EVALUATIONS_TO_DISPLAY:
-                    break
-                attributes.append(format_evaluation(evaluation))
+#     @property
+#     def extra_state_attributes(self):
+#         """Return the state attributes."""
+#         attributes = []
+#         if self.coordinator.data["delays"] is not None:
+#             for delay in self.coordinator.data["delays"]:
+#                 attributes.append(format_delay(delay))
 
-        return {
-            "updated_at": self.coordinator.last_update_success_time,
-            "evaluations": attributes,
-        }
+#         return {
+#             "updated_at": self.coordinator.last_update_success_time,
+#             "delays": attributes,
+#         }
 
 
-class PronoteAveragesSensor(PronoteGenericSensor):
-    """Representation of a Pronote sensor."""
+# class heitzfit4EvaluationsSensor(heitzfit4GenericSensor):
+#     """Representation of a heitzfit4 sensor."""
 
-    def __init__(self, coordinator) -> None:
-        """Initialize the Pronote sensor."""
-        super().__init__(coordinator, "averages", "averages", "len")
+#     def __init__(self, coordinator) -> None:
+#         """Initialize the heitzfit4 sensor."""
+#         super().__init__(coordinator, "evaluations", "evaluations", "len")
 
-    @property
-    def extra_state_attributes(self):
-        """Return the state attributes."""
-        attributes = []
-        if self.coordinator.data["averages"] is not None:
-            for average in self.coordinator.data["averages"]:
-                attributes.append(format_average(average))
-        return {
-            "updated_at": self.coordinator.last_update_success_time,
-            "averages": attributes,
-        }
+#     @property
+#     def extra_state_attributes(self):
+#         """Return the state attributes."""
+#         attributes = []
+#         index_note = 0
+#         if self.coordinator.data["evaluations"] is not None:
+#             for evaluation in self.coordinator.data["evaluations"]:
+#                 index_note += 1
+#                 if index_note == EVALUATIONS_TO_DISPLAY:
+#                     break
+#                 attributes.append(format_evaluation(evaluation))
 
-
-class PronotePunishmentsSensor(PronoteGenericSensor):
-    """Representation of a Pronote sensor."""
-
-    def __init__(self, coordinator) -> None:
-        """Initialize the Pronote sensor."""
-        super().__init__(coordinator, "punishments", "punishments", "len")
-
-    @property
-    def extra_state_attributes(self):
-        """Return the state attributes."""
-        attributes = []
-        if self.coordinator.data["punishments"] is not None:
-            for punishment in self.coordinator.data["punishments"]:
-                attributes.append(format_punishment(punishment))
-        return {
-            "updated_at": self.coordinator.last_update_success_time,
-            "punishments": attributes,
-        }
+#         return {
+#             "updated_at": self.coordinator.last_update_success_time,
+#             "evaluations": attributes,
+#         }
 
 
-class PronoteMenusSensor(PronoteGenericSensor):
-    """Representation of a Pronote sensor."""
+# class heitzfit4AveragesSensor(heitzfit4GenericSensor):
+#     """Representation of a heitzfit4 sensor."""
 
-    def __init__(self, coordinator) -> None:
-        """Initialize the Pronote sensor."""
-        super().__init__(coordinator, "menus", "menus", "len")
+#     def __init__(self, coordinator) -> None:
+#         """Initialize the heitzfit4 sensor."""
+#         super().__init__(coordinator, "averages", "averages", "len")
 
-    @property
-    def extra_state_attributes(self):
-        """Return the state attributes."""
-        attributes = []
-        if self.coordinator.data["menus"] is not None:
-            for menu in self.coordinator.data["menus"]:
-                attributes.append(format_menu(menu))
-        return {
-            "updated_at": self.coordinator.last_update_success_time,
-            "menus": attributes,
-        }
+#     @property
+#     def extra_state_attributes(self):
+#         """Return the state attributes."""
+#         attributes = []
+#         if self.coordinator.data["averages"] is not None:
+#             for average in self.coordinator.data["averages"]:
+#                 attributes.append(format_average(average))
+#         return {
+#             "updated_at": self.coordinator.last_update_success_time,
+#             "averages": attributes,
+#         }
 
 
-class PronoteInformationAndSurveysSensor(PronoteGenericSensor):
-    """Representation of a Pronote sensor."""
+# class heitzfit4PunishmentsSensor(heitzfit4GenericSensor):
+#     """Representation of a heitzfit4 sensor."""
 
-    def __init__(self, coordinator) -> None:
-        """Initialize the Pronote sensor."""
-        super().__init__(
-            coordinator, "information_and_surveys", "information_and_surveys", "len"
-        )
+#     def __init__(self, coordinator) -> None:
+#         """Initialize the heitzfit4 sensor."""
+#         super().__init__(coordinator, "punishments", "punishments", "len")
 
-    @property
-    def extra_state_attributes(self):
-        """Return the state attributes."""
-        attributes = []
-        unread_count = None
-        if not self.coordinator.data["information_and_surveys"] is None:
-            unread_count = 0
-            for information_and_survey in self.coordinator.data[
-                "information_and_surveys"
-            ]:
-                attributes.append(format_information_and_survey(information_and_survey))
-                if information_and_survey.read is False:
-                    unread_count += 1
-        return {
-            "updated_at": self.coordinator.last_update_success_time,
-            "unread_count": unread_count,
-            "information_and_surveys": attributes,
-        }
+#     @property
+#     def extra_state_attributes(self):
+#         """Return the state attributes."""
+#         attributes = []
+#         if self.coordinator.data["punishments"] is not None:
+#             for punishment in self.coordinator.data["punishments"]:
+#                 attributes.append(format_punishment(punishment))
+#         return {
+#             "updated_at": self.coordinator.last_update_success_time,
+#             "punishments": attributes,
+#         }
+
+
+# class heitzfit4MenusSensor(heitzfit4GenericSensor):
+#     """Representation of a heitzfit4 sensor."""
+
+#     def __init__(self, coordinator) -> None:
+#         """Initialize the heitzfit4 sensor."""
+#         super().__init__(coordinator, "menus", "menus", "len")
+
+#     @property
+#     def extra_state_attributes(self):
+#         """Return the state attributes."""
+#         attributes = []
+#         if self.coordinator.data["menus"] is not None:
+#             for menu in self.coordinator.data["menus"]:
+#                 attributes.append(format_menu(menu))
+#         return {
+#             "updated_at": self.coordinator.last_update_success_time,
+#             "menus": attributes,
+#         }
+
+
+# class heitzfit4InformationAndSurveysSensor(heitzfit4GenericSensor):
+#     """Representation of a heitzfit4 sensor."""
+
+#     def __init__(self, coordinator) -> None:
+#         """Initialize the heitzfit4 sensor."""
+#         super().__init__(
+#             coordinator, "information_and_surveys", "information_and_surveys", "len"
+#         )
+
+#     @property
+#     def extra_state_attributes(self):
+#         """Return the state attributes."""
+#         attributes = []
+#         unread_count = None
+#         if not self.coordinator.data["information_and_surveys"] is None:
+#             unread_count = 0
+#             for information_and_survey in self.coordinator.data[
+#                 "information_and_surveys"
+#             ]:
+#                 attributes.append(format_information_and_survey(information_and_survey))
+#                 if information_and_survey.read is False:
+#                     unread_count += 1
+#         return {
+#             "updated_at": self.coordinator.last_update_success_time,
+#             "unread_count": unread_count,
+#             "information_and_surveys": attributes,
+#         }
