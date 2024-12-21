@@ -1,0 +1,36 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Device is already configured"
+        },
+        "error": {
+            "cannot_connect": "Failed to connect",
+            "invalid_auth": "Invalid authentication",
+            "unknown": "Unexpected error"
+        },
+        "step": {
+            "username_password_login": {
+                "data": {
+                    "ent": "Ent",
+                    "password": "Password",
+                    "url": "URL",
+                    "username": "Username",
+                    "device_name": "Device name",
+                    "account_pin": "Account PIN"
+                }
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "description": "Customize the way the integration works",
+                "data": {
+                    "refresh_interval": "Data refresh interval (in minutes)",
+                    "lunch_break_time": "Lunch break threshold time (HH:MM)",
+                    "alarm_offset": "Time delta for alarm (in minutes, before first lesson of the day)"
+                }
+            }
+        }
+    }
+}

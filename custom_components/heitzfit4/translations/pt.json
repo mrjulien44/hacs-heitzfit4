@@ -1,0 +1,24 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Equipamento já configurado"
+        },
+        "error": {
+            "cannot_connect": "Falha na ligação",
+            "invalid_auth": "Falha na autenticação",
+            "unknown": "Erro inesperado"
+        },
+        "step": {
+			"username_password_login": {
+                "data": {
+                    "ent": "ENT",
+                    "password": "Senha",
+                    "url": "URL",
+                    "username": "Utilizador",
+                    "device_name": "Nome do dispositivo",
+                    "account_pin": "PIN da conta"
+                }
+            }
+        }
+    }
+}
