@@ -1,5 +1,5 @@
 # heitzfit4 integration for Home Assistant
-
+![heitzfit4 logo](doc/logo_heitzfit4.png)
 ## Installation
 
 ### Using HACS
