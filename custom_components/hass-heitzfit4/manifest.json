@@ -5,11 +5,11 @@
     "mrjulien44"
   ],
   "config_flow": true,
-  "documentation": "https://github.com/delphiki/hass-heitzfit4",
+  "documentation": "https://github.com/mrjulien44/hass-heitzfit4",
   "iot_class": "cloud_polling",
-  "issue_tracker": "https://github.com/delphiki/hass-heitzfit4/issues",
+  "issue_tracker": "https://github.com/mrjulien44/hass-heitzfit4/issues",
   "requirements": [
-    "heitzfit4py==2.14.1"
+    "heitzfit4py==0.0.1"
   ],
-  "version": "0.15.1"
+  "version": "0.0.1"
 }

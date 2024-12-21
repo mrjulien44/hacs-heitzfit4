@@ -101,7 +101,7 @@ STEP_USER_DATA_SCHEMA_UP = vol.Schema(
 class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     """Handle a config flow for heitzfit4."""
 
-    VERSION = 2
+    VERSION = 1
     heitzfit4_client = None
 
     def __init__(self) -> None:
