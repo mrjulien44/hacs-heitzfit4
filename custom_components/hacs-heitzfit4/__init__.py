@@ -30,7 +30,7 @@ from .const import DOMAIN, PLATFORMS
 _LOGGER = logging.getLogger(__name__)
 
 
-async def async_setup(
+async def async_setup_entry(
     hass: HomeAssistant, config: ConfigEntry
 ):  # pylint: disable=unused-argument
     """Initialisation de l'intégration"""
