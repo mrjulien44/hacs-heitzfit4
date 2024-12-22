@@ -47,14 +47,14 @@ async def async_setup(
 
     # L'argument config contient votre fichier configuration.yaml
     my_config = config.get(DOMAIN)  # pylint: disable=unused-variable
-    username = my_config[CONF_USERNAME]
-    password = my_config[CONF_PASSWORD]
-    club = my_config["club"]
+    # username = my_config[CONF_USERNAME]
+    # password = my_config[CONF_PASSWORD]
+    # club = my_config["club"]
 
-    hass.data[DOMAIN] = {
-        "username": username,
-        "password": password,
-        "club": club
-    }
+    # hass.data[DOMAIN] = {
+    #     "username": username,
+    #     "password": password,
+    #     "club": club
+    # }
     # Return boolean to indicate that initialization was successful.
     return True
