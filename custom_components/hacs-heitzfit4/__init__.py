@@ -26,11 +26,11 @@ async def async_setup_entry(
     coordinator = Heitzfit4DataUpdateCoordinator(hass, config)
     await coordinator.async_config_entry_first_refresh()
 
-    hass.data.setdefault(DOMAIN, {})[entry.entry_id] = coordinator
+    hass.data.setdefault(DOMAIN, {})[config.entry_id] = coordinator
 
     for platform in PLATFORMS:
         hass.async_add_job(
-            hass.config_entries.async_forward_entry_setup(entry, platform)
+            hass.config_entries.async_forward_entry_setup(config, platform)
         )
 
     return True
