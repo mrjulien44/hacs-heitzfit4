@@ -13,7 +13,7 @@
                 "data": {
                     "club": "Id of center",
                     "password": "Password",
-                    "username": "Username",
+                    "username": "Username"
                 }
             }
         }

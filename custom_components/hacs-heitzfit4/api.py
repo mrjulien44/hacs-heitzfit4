@@ -53,6 +53,7 @@ class Heitzfit4API:
             ) as response:
                 result = await response.json()
                 planning_days = json.loads(result)
+                _LOGGER.info(result)
                 # type(planning_days)
                 for planning_day in planning_days:
                     for activities in planning_day:
@@ -74,18 +75,18 @@ class Heitzfit4API:
                         except KeyError:
                             planning_days = ""
                             _LOGGER.error("Heitzfit4 : error during fetching planning data")
-                _LOGGER.info(result)
-                return {"Planning": result}  # Adjust as needed
+                _LOGGER.info(json.dump(planning_days))
+                return {"Planning": json.dump(planning_days)}  # Adjust as needed
 
     async def async_get_booking(self):
-        date_of_day = datetime.now().strftime("%Y-%m-%d")
+        # date_of_day = datetime.now().strftime("%Y-%m-%d")
         async with aiohttp.ClientSession() as session:
             async with session.get(
                 f"https://app.heitzfit.com/c/3649/ws/api/planning/book?idClient={self.clientId}&viewMode=0&familyActive=&familyIdClient=&familyCreatedBySelf=&include=",
                 headers={"Authorization": f"Bearer {self.token}"}
             ) as response:
-                result = await response.json()
-                bookings = json.loads(result)
+                result_booking = await response.json()
+                bookings = json.loads(result_booking)
                 # type(planning_days)
                 for booking in bookings:
                     try:
@@ -102,7 +103,7 @@ class Heitzfit4API:
                         del booking["_group"]
                         del booking["_room"]
                     except KeyError:
-                        planning_days = ""
+                        bookings = ""
                         _LOGGER.error("Heitzfit4 : error during fetching booking data")
-                _LOGGER.info(result)
-                return {"Booking": result}  # Adjust as needed
+                _LOGGER.info(json.dump(bookings))
+                return {"Booking": json.dump(bookings)}  # Adjust as needed
