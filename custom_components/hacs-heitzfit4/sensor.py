@@ -9,7 +9,7 @@ _LOGGER = logging.getLogger(__name__)
 
 SCAN_INTERVAL = timedelta(minutes=120)
 
-URL = "http://app.heitzfit.com"
+URL = "https://app.heitzfit.com/c/3649/ws/api/planning/browse?startDate=2024-12-20&numberOfDays=6&idActivities=&idEmployees=&idRooms=&idGroups=&hourStart=&hourEnd=&stackBy=date&caloriesMin=&caloriesMax=&idCenter=3649"
 
 def setup_platform(hass, config, add_entities, discovery_info=None):
     if discovery_info is None:
@@ -52,6 +52,7 @@ class Heitzfit4Sensor(Entity):
         try:
             response = requests.get(URL, auth=(self._username, self._password))
             data = response.json()
+            _LOGGER.info(data)
             self._state = data.get("state")
             self._attributes[self._attribute] = data.get(self._attribute)
         except Exception as e:
