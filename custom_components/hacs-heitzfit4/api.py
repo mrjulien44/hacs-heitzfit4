@@ -81,7 +81,7 @@ class Heitzfit4API:
         date_of_day = datetime.now().strftime("%Y-%m-%d")
         async with aiohttp.ClientSession() as session:
             async with session.get(
-                f"https://app.heitzfit.com/c/3649/ws/api/planning/book?idClient={self.clientId}&viewMode=0&familyActive=&familyIdClient=&familyCreatedBySelf=&include="
+                f"https://app.heitzfit.com/c/3649/ws/api/planning/book?idClient={self.clientId}&viewMode=0&familyActive=&familyIdClient=&familyCreatedBySelf=&include=",
                 headers={"Authorization": f"Bearer {self.token}"}
             ) as response:
                 result = await response.json()
