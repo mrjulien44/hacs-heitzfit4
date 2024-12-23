@@ -62,5 +62,5 @@ class Heitzfit4DataUpdateCoordinator(DataUpdateCoordinator):
     async def _async_update_data(self):
         """Update data via library."""
         await self.api.async_sign_in()
-        await self.api.async_get_planning()
-        return await self.api.async_get_bookin()
+        # await self.api.async_get_planning()
+        return await self.api.async_get_planning()
