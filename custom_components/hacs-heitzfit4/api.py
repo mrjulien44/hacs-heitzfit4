@@ -47,7 +47,7 @@ class Heitzfit4API:
 
 
     async def async_get_planning(self):
-        date_of_day = datetime.datetime.now().strftime("%Y-%m-%d")
+        date_of_day = datetime.now().strftime("%Y-%m-%d")
         async with aiohttp.ClientSession() as session:
             async with session.get(
                 f"https://app.heitzfit.com/c/3649/ws/api/planning/browse?startDate={date_of_day}&numberOfDays=2&idActivities=&idEmployees=&idRooms=&idGroups=&hourStart=&hourEnd=&stackBy=date&caloriesMin=&caloriesMax=&idCenter=3649",
