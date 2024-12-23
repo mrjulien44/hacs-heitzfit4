@@ -9,14 +9,11 @@
             "unknown": "Unexpected error"
         },
         "step": {
-            "username_password_login": {
+            "init": {
                 "data": {
-                    "ent": "Ent",
+                    "club": "Id of center",
                     "password": "Password",
-                    "url": "URL",
                     "username": "Username",
-                    "device_name": "Device name",
-                    "account_pin": "Account PIN"
                 }
             }
         }

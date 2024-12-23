@@ -1,7 +1,7 @@
 {
   "config": {
     "step": {
-      "username_password_login": {
+      "init": {
         "data": {
           "club": "[%key:common::config_flow::data::club%]",
           "username": "[%key:common::config_flow::data::username%]",
