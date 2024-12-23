@@ -1,7 +1,5 @@
 import aiohttp
-# import datetime
-
-
+import json
 
 from datetime import date, timedelta, datetime
 from typing import Any
@@ -54,5 +52,57 @@ class Heitzfit4API:
                 headers={"Authorization": f"Bearer {self.token}"}
             ) as response:
                 result = await response.json()
+                planning_days = json.loads(result)
+                # type(planning_days)
+                for planning_day in planning_days:
+                    for activities in planning_day:
+                        try:
+                            del activities["idRoom"]
+                            del activities["employee"]
+                            del activities["idEmployee"]
+                            del activities["idGroup"]
+                            del activities["idCenter"]
+                            del activities["calories"]
+                            del activities["deleted"]
+                            del activities["overlapped"]
+                            del activities["_roomAuthorizedToCtr"]
+                            del activities["_taskAuthorizedToCtr"]
+                            del activities["bestContrast"]
+                            del activities["_task"]
+                            del activities["_group"]
+                            del activities["_room"]
+                        except KeyError:
+                            planning_days = ""
+                            _LOGGER.error("Heitzfit4 : error during fetching planning data")
                 _LOGGER.info(result)
-                return {"Planning": result, "Reservations": []}  # Adjust as needed
+                return {"Planning": result}  # Adjust as needed
+
+    async def async_get_booking(self):
+        date_of_day = datetime.now().strftime("%Y-%m-%d")
+        async with aiohttp.ClientSession() as session:
+            async with session.get(
+                f"https://app.heitzfit.com/c/3649/ws/api/planning/book?idClient={self.clientId}&viewMode=0&familyActive=&familyIdClient=&familyCreatedBySelf=&include="
+                headers={"Authorization": f"Bearer {self.token}"}
+            ) as response:
+                result = await response.json()
+                bookings = json.loads(result)
+                # type(planning_days)
+                for booking in bookings:
+                    try:
+                        del booking["qty"]
+                        del booking["cancelable"]
+                        del booking["queueOk"]
+                        del booking["idGroup"]
+                        del booking["isPaid"]
+                        del booking["idCenter"]
+                        del booking["partnerId"]
+                        del booking["partnerIdCli"]
+                        del booking["bestContrast"]
+                        del booking["_teamDetail"]
+                        del booking["_group"]
+                        del booking["_room"]
+                    except KeyError:
+                        planning_days = ""
+                        _LOGGER.error("Heitzfit4 : error during fetching booking data")
+                _LOGGER.info(result)
+                return {"Booking": result}  # Adjust as needed

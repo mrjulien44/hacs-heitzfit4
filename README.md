@@ -27,24 +27,17 @@ You can choose between two options when adding a config entry.
 
 ### using username and password
 
-Use your heitzfit4 URL with username, password and ENT (optional):  
+Use your heitzfit4 with username, password and Club Id:  
 ![heitzfit4 config flow](doc/config_flow_username_password.png)
 
 ## Usage
 
-This integration provides several sensors, always prefixed with `heitzfit4_LASTNAME_FIRSTNAME` (where `LASTNAME` and `FIRSTNAME` are replaced), for example `sensor.heitzfit4_LASTNAME_FIRSTNAME_timetable_today`.
-
 
 | Sensor | Description |
 |--------|-------------|
-| `sensor.heitzfit4_LASTNAME_FIRSTNAME` | basic informations about you |
-| `sensor.heitzfit4_timetable_today` | today's timetable |
-| `sensor.heitzfit4_timetable_tomorrow` | tomorrow's timetable |
-| `sensor.heitzfit4_timetable_next_day` | next school day timetable |
-| `sensor.heitzfit4_timetable_period` | timetable for next 15 days |
-| `sensor.heitzfit4_timetable_ical_url` | iCal URL for the timetable (if available) |
-| `sensor.heitzfit4_reservation` | reservation |
-| `sensor.heitzfit4_reservation_period` | reservation for max 6 days |
+| `sensor.heitzfit4_planning` | Planning for coming days |
+| `sensor.heitzfit4_booking` | Booking |
+
 
 The sensors are updated every 15 minutes.
 

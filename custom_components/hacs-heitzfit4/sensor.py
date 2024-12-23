@@ -8,7 +8,7 @@ async def async_setup_entry(hass, entry, async_add_entities):
     coordinator = hass.data[DOMAIN][entry.entry_id]
     async_add_entities([
         Heitzfit4Sensor(coordinator, "heitfit4_planning", "Planning"),
-        Heitzfit4Sensor(coordinator, "heitfit4_reservation", "Reservations")
+        Heitzfit4Sensor(coordinator, "heitfit4_booking", "booking")
     ])
 
 class Heitzfit4Sensor(CoordinatorEntity, SensorEntity):
