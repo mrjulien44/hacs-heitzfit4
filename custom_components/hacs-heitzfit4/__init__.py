@@ -6,7 +6,7 @@ import logging
 from homeassistant.core import HomeAssistant
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
-
+from .api import Heitzfit4API
 from .const import DOMAIN, PLATFORMS
 
 _LOGGER = logging.getLogger(__name__)
