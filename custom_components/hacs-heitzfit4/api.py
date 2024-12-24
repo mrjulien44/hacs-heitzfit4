@@ -52,14 +52,13 @@ class Heitzfit4API:
             ) as response:
                 result_booking = await response.json()
                 # bookings = json.loads(result_booking)
-                filtered_data = filter_fields(json.dumps(result_booking))
                 # print(json.dumps(filtered_data, indent=4))
-                _LOGGER.info(json.dumps(filtered_data))
-                return {"Booking": json.dumps(filtered_data)}  # Adjust as needed
+                _LOGGER.info(json.dumps(result_booking))
+                return {"Booking": json.dumps(result_booking)}  # Adjust as needed
     
     async def async_get_planning(self):
         date_of_day = datetime.now().strftime("%Y-%m-%d")
-        bookings = self.async_get_booking(self)
+        bookings = self.async_get_booking()
         _LOGGER.info("Récupération des bookings")
         _LOGGER.info(bookings)
 
@@ -74,11 +73,11 @@ class Heitzfit4API:
                 _LOGGER.info(type(filtered_data))
                 _LOGGER.info(filtered_data)
                 _LOGGER.info("--------------")
-                add_booked_flag(filtered_data, bookings)
+                updated_planning_data = add_booked_flag(filtered_data, bookings)
                 _LOGGER.info("--- AVEC RESA -------")
-                _LOGGER.info(filtered_data)
+                _LOGGER.info(updated_planning_data)
                 
-                return {"Planning": filtered_data}  # Adjust as needed
+                return {"Planning": updated_planning_data}  # Adjust as needed
 
 
 
