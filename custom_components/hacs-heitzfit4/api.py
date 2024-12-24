@@ -61,24 +61,27 @@ class Heitzfit4API:
                     _LOGGER.info(planning_day)
                     for activities in planning_day:
                         _LOGGER.info(activities)
-                        try:
-                            del activities["idRoom"]
-                            del activities["employee"]
-                            del activities["idEmployee"]
-                            del activities["idGroup"]
-                            del activities["idCenter"]
-                            del activities["calories"]
-                            del activities["deleted"]
-                            del activities["overlapped"]
-                            del activities["_roomAuthorizedToCtr"]
-                            del activities["_taskAuthorizedToCtr"]
-                            del activities["bestContrast"]
-                            del activities["_task"]
-                            del activities["_group"]
-                            del activities["_room"]
-                        except KeyError:
-                            planning_days = ""
-                            _LOGGER.error("Heitzfit4 : error during fetching planning data")
+                        for activity in activities:
+                            _LOGGER.info(activity)
+                            try:
+                                activity.pop("idRoom",None)
+                                # del activities["idRoom"]
+                                del activities["employee"]
+                                del activities["idEmployee"]
+                                del activities["idGroup"]
+                                del activities["idCenter"]
+                                del activities["calories"]
+                                del activities["deleted"]
+                                del activities["overlapped"]
+                                del activities["_roomAuthorizedToCtr"]
+                                del activities["_taskAuthorizedToCtr"]
+                                del activities["bestContrast"]
+                                del activities["_task"]
+                                del activities["_group"]
+                                del activities["_room"]
+                            except KeyError:
+                                planning_days = ""
+                                _LOGGER.error("Heitzfit4 : error during fetching planning data")
                 _LOGGER.info(json.dump(planning_days))
                 return {"Planning": json.dump(planning_days)}  # Adjust as needed
 
