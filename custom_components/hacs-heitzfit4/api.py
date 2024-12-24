@@ -59,7 +59,7 @@ class Heitzfit4API:
                 # type(planning_days)
                 filtered_data = filter_fields(planning_days)
                 # print(json.dumps(filtered_data, indent=4))
-                _LOGGER.info("--------------"))
+                _LOGGER.info("--------------")
                 _LOGGER.info(type(filtered_data))
                 _LOGGER.info(filtered_data)
                 return {"Planning": filtered_data}  # Adjust as needed
