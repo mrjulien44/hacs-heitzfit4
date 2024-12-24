@@ -57,33 +57,10 @@ class Heitzfit4API:
                 # _LOGGER.info(result_planning)
                 # planning_days = json.loads(result_planning)
                 # type(planning_days)
-                for planning_day in planning_days:
-                    _LOGGER.info(planning_day)
-                    for activities in planning_day:
-                        _LOGGER.info(activities)
-                        for activity in activities:
-                            _LOGGER.info(activity)
-                            try:
-                                activity.pop("idRoom",None)
-                                # del activities["idRoom"]
-                                del activities["employee"]
-                                del activities["idEmployee"]
-                                del activities["idGroup"]
-                                del activities["idCenter"]
-                                del activities["calories"]
-                                del activities["deleted"]
-                                del activities["overlapped"]
-                                del activities["_roomAuthorizedToCtr"]
-                                del activities["_taskAuthorizedToCtr"]
-                                del activities["bestContrast"]
-                                del activities["_task"]
-                                del activities["_group"]
-                                del activities["_room"]
-                            except KeyError:
-                                planning_days = ""
-                                _LOGGER.error("Heitzfit4 : error during fetching planning data")
-                _LOGGER.info(json.dump(planning_days))
-                return {"Planning": json.dump(planning_days)}  # Adjust as needed
+                filtered_data = filter_fields(json.dump(planning_days))
+                # print(json.dumps(filtered_data, indent=4))
+                _LOGGER.info(json.dump(filtered_data))
+                return {"Planning": json.dump(filtered_data)}  # Adjust as needed
 
     async def async_get_booking(self):
         # date_of_day = datetime.now().strftime("%Y-%m-%d")
@@ -95,7 +72,7 @@ class Heitzfit4API:
                 result_booking = await response.json()
                 # bookings = json.loads(result_booking)
                 filtered_data = filter_fields(json.dump(result_booking))
-                print(json.dumps(filtered_data, indent=4))
+                # print(json.dumps(filtered_data, indent=4))
                 _LOGGER.info(json.dump(filtered_data))
                 return {"Booking": json.dump(filtered_data)}  # Adjust as needed
 
