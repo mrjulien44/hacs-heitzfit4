@@ -30,7 +30,15 @@ class Heitzfit4Sensor(CoordinatorEntity, SensorEntity):
         """Return the state of the sensor."""
         return self.coordinator.data.get(self._attribute)
 
+    # @property
+    # def extra_state_attributes(self):
+    #     """Return the state attributes."""
+    #     # return {self._attribute: self.coordinator.data.get(self._attribute)}
+    #     return self._hass.custom_attributes   #add from web search
+    
     @property
     def extra_state_attributes(self):
         """Return the state attributes."""
-        return {self._attribute: self.coordinator.data.get(self._attribute)}
+        return {
+            "planning": self.coordinator.data.get("Planning")
+        }

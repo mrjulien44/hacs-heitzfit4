@@ -43,7 +43,6 @@ class Heitzfit4API:
                 _LOGGER.info(self.token)
                 _LOGGER.info(self.clientId)
 
-
     async def async_get_planning(self):
         date_of_day = datetime.now().strftime("%Y-%m-%d")
         async with aiohttp.ClientSession() as session:
@@ -51,14 +50,8 @@ class Heitzfit4API:
                 f"https://app.heitzfit.com/c/3649/ws/api/planning/browse?startDate={date_of_day}&numberOfDays=4&idActivities=&idEmployees=&idRooms=&idGroups=&hourStart=&hourEnd=&stackBy=date&caloriesMin=&caloriesMax=&idCenter=3649",
                 headers={"Authorization": f"Bearer {self.token}"}
             ) as response:
-                # result_planning = await response.json()
                 planning_days = await response.json()
-                # _LOGGER.info(type(planning_days))
-                # _LOGGER.info(result_planning)
-                # planning_days = json.loads(result_planning)
-                # type(planning_days)
                 filtered_data = filter_fields(planning_days)
-                # print(json.dumps(filtered_data, indent=4))
                 _LOGGER.info("--------------")
                 _LOGGER.info(type(filtered_data))
                 _LOGGER.info(filtered_data)
@@ -80,7 +73,7 @@ class Heitzfit4API:
 
 def filter_fields(data):
     fields_to_remove = {
-        "idRoom", "employee", "idGroup", "idCenter", "calories", "deleted", "overlapped",
+        "idRoom", "idEmployee", "idGroup", "idCenter", "calories", "deleted", "overlapped", "idActivity","manualPlaces","color",
         "_roomAuthorizedToCtr", "_taskAuthorizedToCtr", "bestContrast", "_task", "_room", "_group"
     }
 

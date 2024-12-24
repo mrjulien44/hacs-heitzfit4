@@ -25,7 +25,8 @@ async def async_setup_entry(
     # )
     coordinator = Heitzfit4DataUpdateCoordinator(hass, config)
     await coordinator.async_config_entry_first_refresh()
-
+    _LOGGER.info("Coordinator initialized")
+    _LOGGER.info(coordinator)
     hass.data.setdefault(DOMAIN, {})[config.entry_id] = coordinator
 
     for platform in PLATFORMS:
