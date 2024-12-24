@@ -42,21 +42,7 @@ class Heitzfit4API:
                 _LOGGER.info(result)
                 _LOGGER.info(self.token)
                 _LOGGER.info(self.clientId)
-
-    async def async_get_planning(self):
-        date_of_day = datetime.now().strftime("%Y-%m-%d")
-        async with aiohttp.ClientSession() as session:
-            async with session.get(
-                f"https://app.heitzfit.com/c/3649/ws/api/planning/browse?startDate={date_of_day}&numberOfDays=4&idActivities=&idEmployees=&idRooms=&idGroups=&hourStart=&hourEnd=&stackBy=date&caloriesMin=&caloriesMax=&idCenter=3649",
-                headers={"Authorization": f"Bearer {self.token}"}
-            ) as response:
-                planning_days = await response.json()
-                filtered_data = filter_fields(planning_days)
-                _LOGGER.info("--------------")
-                _LOGGER.info(type(filtered_data))
-                _LOGGER.info(filtered_data)
-                return {"Planning": filtered_data}  # Adjust as needed
-
+    
     async def async_get_booking(self):
         # date_of_day = datetime.now().strftime("%Y-%m-%d")
         async with aiohttp.ClientSession() as session:
@@ -70,6 +56,41 @@ class Heitzfit4API:
                 # print(json.dumps(filtered_data, indent=4))
                 _LOGGER.info(json.dumps(filtered_data))
                 return {"Booking": json.dumps(filtered_data)}  # Adjust as needed
+    
+    async def async_get_planning(self):
+        date_of_day = datetime.now().strftime("%Y-%m-%d")
+        bookings = self.async_get_booking(self)
+        _LOGGER.info("Récupération des bookings")
+        _LOGGER.info(bookings)
+
+        async with aiohttp.ClientSession() as session:
+            async with session.get(
+                f"https://app.heitzfit.com/c/3649/ws/api/planning/browse?startDate={date_of_day}&numberOfDays=4&idActivities=&idEmployees=&idRooms=&idGroups=&hourStart=&hourEnd=&stackBy=date&caloriesMin=&caloriesMax=&idCenter=3649",
+                headers={"Authorization": f"Bearer {self.token}"}
+            ) as response:
+                planning_days = await response.json()
+                filtered_data = filter_fields(planning_days)
+                _LOGGER.info("--------------")
+                _LOGGER.info(type(filtered_data))
+                _LOGGER.info(filtered_data)
+                _LOGGER.info("--------------")
+                add_booked_flag(filtered_data, bookings)
+                _LOGGER.info("--- AVEC RESA -------")
+                _LOGGER.info(filtered_data)
+                
+                return {"Planning": filtered_data}  # Adjust as needed
+
+
+
+def add_booked_flag(planning_data, booking_data):
+    booking_ids = {booking["idPlanning"] for booking in booking_data}
+
+    for date, activities in planning_data.items():
+        for activity in activities:
+            if activity["idActivity"] in booking_ids:
+                activity["booked"] = True
+
+    return planning_data
 
 def filter_fields(data):
     fields_to_remove = {

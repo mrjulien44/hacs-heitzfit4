@@ -5,6 +5,8 @@ from homeassistant.const import Platform
 DOMAIN = "hacs-heitzfit4"
 # EVENT_TYPE = "heitzfit4_event"
 
+CONF_NAME = "Heitzfit4"
+
 PLANNING_MAX_DAYS = 6
 #BOOKING_MAX_DAYS = 6
 # DEFAULT_REFRESH_INTERVAL = 15
