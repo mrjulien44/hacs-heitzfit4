@@ -57,10 +57,11 @@ class Heitzfit4API:
                 # _LOGGER.info(result_planning)
                 # planning_days = json.loads(result_planning)
                 # type(planning_days)
-                filtered_data = filter_fields(json.dump(planning_days))
+                filtered_data = filter_fields(json.dumps(planning_days))
                 # print(json.dumps(filtered_data, indent=4))
-                _LOGGER.info(json.dump(filtered_data))
-                return {"Planning": json.dump(filtered_data)}  # Adjust as needed
+                type(filtered_data)
+                _LOGGER.info(filtered_data)
+                return {"Planning": filtered_data}  # Adjust as needed
 
     async def async_get_booking(self):
         # date_of_day = datetime.now().strftime("%Y-%m-%d")
@@ -71,10 +72,10 @@ class Heitzfit4API:
             ) as response:
                 result_booking = await response.json()
                 # bookings = json.loads(result_booking)
-                filtered_data = filter_fields(json.dump(result_booking))
+                filtered_data = filter_fields(json.dumps(result_booking))
                 # print(json.dumps(filtered_data, indent=4))
-                _LOGGER.info(json.dump(filtered_data))
-                return {"Booking": json.dump(filtered_data)}  # Adjust as needed
+                _LOGGER.info(json.dumps(filtered_data))
+                return {"Booking": json.dumps(filtered_data)}  # Adjust as needed
 
 def filter_fields(data):
     fields_to_remove = {
