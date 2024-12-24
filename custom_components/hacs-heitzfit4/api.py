@@ -93,24 +93,27 @@ class Heitzfit4API:
                 headers={"Authorization": f"Bearer {self.token}"}
             ) as response:
                 result_booking = await response.json()
-                bookings = json.loads(result_booking)
-                # type(planning_days)
-                for booking in bookings:
-                    try:
-                        del booking["qty"]
-                        del booking["cancelable"]
-                        del booking["queueOk"]
-                        del booking["idGroup"]
-                        del booking["isPaid"]
-                        del booking["idCenter"]
-                        del booking["partnerId"]
-                        del booking["partnerIdCli"]
-                        del booking["bestContrast"]
-                        del booking["_teamDetail"]
-                        del booking["_group"]
-                        del booking["_room"]
-                    except KeyError:
-                        bookings = ""
-                        _LOGGER.error("Heitzfit4 : error during fetching booking data")
-                _LOGGER.info(json.dump(bookings))
-                return {"Booking": json.dump(bookings)}  # Adjust as needed
+                # bookings = json.loads(result_booking)
+                filtered_data = filter_fields(json.dump(result_booking))
+                print(json.dumps(filtered_data, indent=4))
+                _LOGGER.info(json.dump(filtered_data))
+                return {"Booking": json.dump(filtered_data)}  # Adjust as needed
+
+def filter_fields(data):
+    fields_to_remove = {
+        "idRoom", "employee", "idGroup", "idCenter", "calories", "deleted", "overlapped",
+        "_roomAuthorizedToCtr", "_taskAuthorizedToCtr", "bestContrast", "_task", "_room", "_group"
+    }
+
+    def filter_dict(d):
+        return {k: v for k, v in d.items() if k not in fields_to_remove}
+
+    filtered_data = {}
+    for date, activities in data.items():
+        filtered_activities = []
+        for activity in activities:
+            filtered_activity = filter_dict(activity)
+            filtered_activities.append(filtered_activity)
+        filtered_data[date] = filtered_activities
+
+    return filtered_data
