@@ -53,13 +53,14 @@ class Heitzfit4API:
             ) as response:
                 # result_planning = await response.json()
                 planning_days = await response.json()
-                _LOGGER.info(type(planning_days))
+                # _LOGGER.info(type(planning_days))
                 # _LOGGER.info(result_planning)
                 # planning_days = json.loads(result_planning)
                 # type(planning_days)
                 filtered_data = filter_fields(planning_days)
                 # print(json.dumps(filtered_data, indent=4))
-                type(filtered_data)
+                _LOGGER.info("--------------"))
+                _LOGGER.info(type(filtered_data))
                 _LOGGER.info(filtered_data)
                 return {"Planning": filtered_data}  # Adjust as needed
 
