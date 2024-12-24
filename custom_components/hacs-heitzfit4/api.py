@@ -58,7 +58,9 @@ class Heitzfit4API:
                 # planning_days = json.loads(result_planning)
                 # type(planning_days)
                 for planning_day in planning_days:
+                    _LOGGER.info(planning_day)
                     for activities in planning_day:
+                        _LOGGER.info(activities)
                         try:
                             del activities["idRoom"]
                             del activities["employee"]
