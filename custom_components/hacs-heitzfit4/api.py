@@ -51,9 +51,10 @@ class Heitzfit4API:
                 f"https://app.heitzfit.com/c/3649/ws/api/planning/browse?startDate={date_of_day}&numberOfDays=4&idActivities=&idEmployees=&idRooms=&idGroups=&hourStart=&hourEnd=&stackBy=date&caloriesMin=&caloriesMax=&idCenter=3649",
                 headers={"Authorization": f"Bearer {self.token}"}
             ) as response:
-                result = await response.json()
-                _LOGGER.info(result)
-                planning_days = json.loads(result)
+                result_planning = await response.json()
+                _LOGGER.info(type(result_planning))
+                # _LOGGER.info(result_planning)
+                planning_days = json.loads(result_planning)
                 # type(planning_days)
                 for planning_day in planning_days:
                     for activities in planning_day:
