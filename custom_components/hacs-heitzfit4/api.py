@@ -49,7 +49,7 @@ class Heitzfit4API:
         async with aiohttp.ClientSession() as session:
             async with session.get(
                 f"https://app.heitzfit.com/c/3649/ws/api/planning/book?idClient={self.clientId}&viewMode=0&familyActive=&familyIdClient=&familyCreatedBySelf=&include=",
-                headers={"Authorization": f"Bearer {self.token}"}
+                headers={"Authorization": {self.token}}
             ) as response:
                 result_booking = await response.json()
                 _LOGGER.info(json.dumps(result_booking))
