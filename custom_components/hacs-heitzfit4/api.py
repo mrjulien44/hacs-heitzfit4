@@ -1,5 +1,6 @@
 import aiohttp
 import json
+import asyncio
 
 from datetime import date, timedelta, datetime
 from typing import Any
@@ -58,7 +59,7 @@ class Heitzfit4API:
     
     async def async_get_planning(self):
         date_of_day = datetime.now().strftime("%Y-%m-%d")
-        bookings = self.async_get_booking()
+        bookings = asyncio.run(self.async_get_booking())
         _LOGGER.info("Récupération des bookings")
         _LOGGER.info(bookings)
 
