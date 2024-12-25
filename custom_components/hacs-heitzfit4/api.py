@@ -84,7 +84,9 @@ def add_booked_flag(planning_data, booking_data):
     _LOGGER.info("--- DANS ADD BOOKED FLAG -------")
     _LOGGER.info(type(planning_data))
     _LOGGER.info(type(booking_data))
-
+    _LOGGER.info(booking_data[0])
+    _LOGGER.info(booking_data[1])
+    _LOGGER.info(booking_data[2])
     booking_data=booking_data.replace(booking_data[:2],'',1)
     booking_data=booking_data[::-1]
     booking_data=booking_data.replace(booking_data[:2],'',1)
