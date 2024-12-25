@@ -93,6 +93,11 @@ def add_booked_flag(planning_data, booking_data):
     for val in booking_data:
         _LOGGER.info("-------------- booking data VAL--------------")
         _LOGGER.info(val)
+        for detail in val:
+            _LOGGER.info("-------------- booking data DETAIL--------------")
+            _LOGGER.info(detail)
+            _LOGGER.info(type(detail))
+            _LOGGER.info(detail["idPlanning"])
     # filtered_activity = filter_booked(booking_data)
     _LOGGER.info("-------------- filtered booked activity --------------")
     _LOGGER.info(filtered_activity)
