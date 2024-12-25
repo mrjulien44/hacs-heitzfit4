@@ -1,33 +1,41 @@
 {
     "config": {
-        "abort": {
-            "already_configured": "Intégration déjà configurée"
-        },
-        "error": {
-            "cannot_connect": "Impossible de se connecter",
-            "invalid_auth": "Erreur d'authentification",
-            "unknown": "Une erreur est survenue"
-        },
-        "step": {
-            "init": {
-                "data": {
-                    "password": "Mot de passe",
-                    "club": "Identifiant du club",
-                    "username": "Identifiant"
-                }
-            }
+      "flow-title": "Configuration de Heitzfit4",
+      "step": {
+        "user": {
+          "title": "Configuration de Heitzfit4",
+          "description": "Configuration de Heitzfit4",
+          "data": {
+            "club": "Numéro du centre",
+            "username": "Utilisateur",
+            "password": "Mot de passe"
+          },
+          "data_description": {
+            "club": "Numéro du centre",
+            "username": "Utilisateur",
+            "password": "Mot de passe"
+          }
         }
+      },
+      "error": {
+        "cannot_connect": "[%key:common::config_flow::error::cannot_connect%]",
+        "invalid_auth": "[%key:common::config_flow::error::invalid_auth%]",
+        "unknown": "[%key:common::config_flow::error::unknown%]"
+      },
+      "abort": {
+        "already_configured": "[%key:common::config_flow::abort::already_configured_device%]"
+      }
     },
     "options": {
-        "step": {
-            "init": {
-                "description": "Configurer l'intégration",
-                "data": {
-                    "password": "Mot de passe",
-                    "club": "Identifiant du club",
-                    "username": "Identifiant"
-                }
-            }
+      "step": {
+        "init": {
+          "description": "Customize the way the integration works",
+          "data": {
+            "refresh_interval": "Data refresh interval (in minutes)",
+            "alarm_offset": "Time delta for alarm (in minutes, before first booked activity of the day)"
+          }
         }
+      }
     }
-}
+  }
+  

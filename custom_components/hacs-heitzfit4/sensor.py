@@ -7,9 +7,9 @@ async def async_setup_entry(hass, entry, async_add_entities):
     """Set up Heitzfit4 sensor entities."""
     coordinator = hass.data[DOMAIN][entry.entry_id]
     async_add_entities([
-        Heitzfit4Sensor(coordinator, "heitfit4_planning", "Planning"),
-        Heitzfit4Sensor(coordinator, "heitfit4_booking", "booking")
-    ])
+        Heitzfit4Sensor(coordinator, "heitfit4_planning")
+        # Heitzfit4Sensor(coordinator, "heitfit4_booking", "booking")
+    ], True)
 
 class Heitzfit4Sensor(CoordinatorEntity, SensorEntity):
     """Representation of a Heitzfit4 sensor."""
@@ -19,11 +19,21 @@ class Heitzfit4Sensor(CoordinatorEntity, SensorEntity):
         super().__init__(coordinator)
         self._name = name
         self._attribute = attribute
+        self._attr_native_value = 6
+        """Initisalisation de notre entité"""
+        self._attr_has_entity_name = True
+        self._attr_name = "Heitzfit4"
+        self._attr_unique_id = "Heitzfit4"
 
     @property
     def name(self):
         """Return the name of the sensor."""
         return self._name
+    
+    @property
+    def icon(self) -> str | None:
+        """Return the icon of the sensor."""
+        return "mdi:WeightLifter"
 
     @property
     def state(self):
