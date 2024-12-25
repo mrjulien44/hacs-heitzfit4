@@ -7,7 +7,7 @@ async def async_setup_entry(hass, entry, async_add_entities):
     """Set up Heitzfit4 sensor entities."""
     coordinator = hass.data[DOMAIN][entry.entry_id]
     async_add_entities([
-        Heitzfit4Sensor(coordinator, "heitfit4_planning")
+        Heitzfit4Sensor(coordinator, "heitfit4_planning", "planning")
         # Heitzfit4Sensor(coordinator, "heitfit4_booking", "booking")
     ], True)
 
