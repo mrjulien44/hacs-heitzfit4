@@ -52,7 +52,7 @@ class Heitzfit4API:
                 headers={"Authorization": f"{self.token}"}
             ) as response:
                 result_booking = await response.json()
-                _LOGGER.info(json.dumps(result_booking))
+                # _LOGGER.info(json.dumps(result_booking))
                 return {json.dumps(result_booking)}  # Adjust as needed
     
     async def async_get_planning(self):
@@ -60,7 +60,8 @@ class Heitzfit4API:
         bookings = await self.async_get_booking()
         _LOGGER.info("Récupération des bookings")
         _LOGGER.info(bookings)
-
+        _LOGGER.info("------------- type des bookings --------------")
+        _LOGGER.info(type(bookings))
         async with aiohttp.ClientSession() as session:
             async with session.get(
                 f"https://app.heitzfit.com/c/3649/ws/api/planning/browse?startDate={date_of_day}&numberOfDays=4&idActivities=&idEmployees=&idRooms=&idGroups=&hourStart=&hourEnd=&stackBy=date&caloriesMin=&caloriesMax=&idCenter=3649",
@@ -68,7 +69,7 @@ class Heitzfit4API:
             ) as response:
                 planning_days = await response.json()
                 filtered_data = filter_fields(planning_days)
-                _LOGGER.info("--------------")
+                _LOGGER.info("-------------- type des données filtrées --------------")
                 _LOGGER.info(type(filtered_data))
                 _LOGGER.info(filtered_data)
                 _LOGGER.info("--------------")
@@ -78,21 +79,28 @@ class Heitzfit4API:
                 
                 return {"Planning": updated_planning_data}  # Adjust as needed
 
-
-
 def add_booked_flag(planning_data, booking_data):
-    booking_ids = {booking["idPlanning"] for booking in booking_data}
+    _LOGGER.info("--- DANS ADD BOOKED FLAG -------")
+    _LOGGER.info(type(planning_data))
+    _LOGGER.info(type(booking_data))
 
-    for date, activities in planning_data.items():
-        for activity in activities:
-            if activity["idActivity"] in booking_ids:
-                activity["booked"] = True
+    def filter_booked(d):
+            return {k: v for k, v in d.items() if k not in "idPlanning"}
+    
+    filtered_activity = filter_booked(booking_data)
+    _LOGGER.info("-------------- filtered booked activity --------------")
+    _LOGGER.info(filtered_activity)
+
+    # for date, activities in planning_data.items():
+    #     for activity in activities:
+    #         if activity["idActivity"] in booking_ids:
+    #             activity["booked"] = True
 
     return planning_data
 
 def filter_fields(data):
     fields_to_remove = {
-        "idRoom", "idEmployee", "idGroup", "idCenter", "calories", "deleted", "overlapped", "idActivity","manualPlaces","color",
+        "idRoom", "idEmployee", "employee", "idGroup", "idCenter", "calories", "deleted", "overlapped", "idActivity","manualPlaces","color",
         "_roomAuthorizedToCtr", "_taskAuthorizedToCtr", "bestContrast", "_task", "_room", "_group"
     }
 
