@@ -85,27 +85,24 @@ def add_booked_flag(planning_data, booking_data):
     _LOGGER.info(type(planning_data))
     _LOGGER.info(type(booking_data))
 
-    def filter_booked(d):
-        for val in d:
-            _LOGGER.info(val)
-        return {k: v for k, v in d.items() if k not in "idPlanning"}
-    
-    for val in booking_data:
-        _LOGGER.info("-------------- booking data VAL--------------")
-        _LOGGER.info(val)
-        for detail in val:
-            _LOGGER.info("-------------- booking data DETAIL--------------")
-            _LOGGER.info(detail)
-            _LOGGER.info(type(detail))
-            _LOGGER.info(detail["idPlanning"])
-    # filtered_activity = filter_booked(booking_data)
-    _LOGGER.info("-------------- filtered booked activity --------------")
-    _LOGGER.info(filtered_activity)
+    booking_data=booking_data.replace(booking_data[:2],'',1)
+    booking_data=booking_data[::-1]
+    booking_data=booking_data.replace(booking_data[:2],'',1)
+    booking_data=booking_data[::-1]
+    booked_activities=set()
+    for id_planning in booking_data:
+        #print(x)
+        print(type(id_planning))
+        print(id_planning["idPlanning"])
+        booked_activities.add(id_planning["idPlanning"])
 
-    # for date, activities in planning_data.items():
-    #     for activity in activities:
-    #         if activity["idActivity"] in booking_ids:
-    #             activity["booked"] = True
+    
+    _LOGGER.info("-------------- filtered booked activity --------------")
+
+    for date, activities in planning_data.items():
+        for activity in activities:
+            if activity["idActivity"] in booked_activities:
+                activity["booked"] = True
 
     return planning_data
 
