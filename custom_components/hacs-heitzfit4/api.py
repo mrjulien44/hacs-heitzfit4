@@ -94,13 +94,17 @@ def add_booked_flag(planning_data, booking_data):
     booking_data_str=booking_data_str[::-1]
     _LOGGER.info(booking_data_str)
     booking= json.loads(booking_data_str)
+    _LOGGER.info("-------------- booking --------------")
+    _LOGGER.info(type(booking))
+    _LOGGER.info(booking)
     booked_activities=set()
     for id_planning in booking:
         #print(x)
-        print(type(id_planning))
-        print(id_planning["idPlanning"])
+        _LOGGER.info(type(id_planning))
+        _LOGGER.info(id_planning["idPlanning"])
         booked_activities.add(id_planning["idPlanning"])
-
+    _LOGGER.info("-------------- booked activities --------------")
+    _LOGGER.info(booked_activities)
     
     _LOGGER.info("-------------- filtered booked activity --------------")
 
