@@ -53,8 +53,6 @@ class Heitzfit4API:
             ) as response:
                 result_booking = await response.json()
                 _LOGGER.info("------------- type des bookings 1 --------------")
-                # _LOGGER.info(type(result_booking))
-                # _LOGGER.info(json.dumps(result_booking))
                 return {json.dumps(result_booking)}  # Adjust as needed
     
     async def async_get_planning(self):
