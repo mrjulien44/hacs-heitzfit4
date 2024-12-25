@@ -52,15 +52,16 @@ class Heitzfit4API:
                 headers={"Authorization": f"{self.token}"}
             ) as response:
                 result_booking = await response.json()
+                _LOGGER.info("------------- type des bookings 1 --------------")
+                # _LOGGER.info(type(result_booking))
                 # _LOGGER.info(json.dumps(result_booking))
-                return {result_booking}  # Adjust as needed
+                return {json.dumps(result_booking)}  # Adjust as needed
     
     async def async_get_planning(self):
         date_of_day = datetime.now().strftime("%Y-%m-%d")
         bookings = await self.async_get_booking()
-        _LOGGER.info("Récupération des bookings")
-        _LOGGER.info(bookings)
-        _LOGGER.info("------------- type des bookings --------------")
+        # _LOGGER.info(bookings)
+        _LOGGER.info("------------- type des bookings2--------------")
         _LOGGER.info(type(bookings))
         async with aiohttp.ClientSession() as session:
             async with session.get(
@@ -85,9 +86,14 @@ def add_booked_flag(planning_data, booking_data):
     _LOGGER.info(type(booking_data))
 
     def filter_booked(d):
-            return {k: v for k, v in d.items() if k not in "idPlanning"}
+        for val in d:
+            _LOGGER.info(val)
+        return {k: v for k, v in d.items() if k not in "idPlanning"}
     
-    filtered_activity = filter_booked(booking_data)
+    for val in booking_data:
+        _LOGGER.info("-------------- booking data VAL--------------")
+        _LOGGER.info(val)
+    # filtered_activity = filter_booked(booking_data)
     _LOGGER.info("-------------- filtered booked activity --------------")
     _LOGGER.info(filtered_activity)
 
