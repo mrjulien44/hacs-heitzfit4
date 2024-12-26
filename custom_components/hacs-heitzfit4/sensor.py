@@ -7,8 +7,8 @@ async def async_setup_entry(hass, entry, async_add_entities):
     """Set up Heitzfit4 sensor entities."""
     coordinator = hass.data[DOMAIN][entry.entry_id]
     async_add_entities([
-        Heitzfit4Sensor(coordinator, "heitfit4_planning", "planning")
-        # Heitzfit4Sensor(coordinator, "heitfit4_booking", "booking")
+        Heitzfit4Sensor(coordinator, "heitzfit4_planning", "planning")
+        # Heitzfit4Sensor(coordinator, "heitzfit4_booking", "booking")
     ], True)
 
 class Heitzfit4Sensor(CoordinatorEntity, SensorEntity):
@@ -39,12 +39,6 @@ class Heitzfit4Sensor(CoordinatorEntity, SensorEntity):
     def state(self):
         """Return the state of the sensor."""
         return self.coordinator.data.get(self._attribute)
-
-    # @property
-    # def extra_state_attributes(self):
-    #     """Return the state attributes."""
-    #     # return {self._attribute: self.coordinator.data.get(self._attribute)}
-    #     return self._hass.custom_attributes   #add from web search
     
     @property
     def extra_state_attributes(self):
