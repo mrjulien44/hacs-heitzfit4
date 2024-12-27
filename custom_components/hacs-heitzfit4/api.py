@@ -19,10 +19,11 @@ from .const import (
 _LOGGER = logging.getLogger(__name__)
 
 class Heitzfit4API:
-    def __init__(self, club, username, password):
+    def __init__(self, club, username, password, nbDays):
         self.club = club
         self.username = username
         self.password = password
+        self.nbDays = nbDays
         self.token = None
         self.clientId = None
 
@@ -40,18 +41,14 @@ class Heitzfit4API:
                 result = await response.json()
                 self.token = result["token"]
                 self.clientId = result["clientId"]
-                _LOGGER.info(result)
-                _LOGGER.info(self.token)
-                _LOGGER.info(self.clientId)
     
     async def async_get_booking(self):
         async with aiohttp.ClientSession() as session:
             async with session.get(
-                f"https://app.heitzfit.com/c/3649/ws/api/planning/book?idClient={self.clientId}&viewMode=0&familyActive=&familyIdClient=&familyCreatedBySelf=&include=",
+                f"https://app.heitzfit.com/c/3649/ws/api/planning/book?idClient={self.nbDays}&viewMode=0&familyActive=&familyIdClient=&familyCreatedBySelf=&include=",
                 headers={"Authorization": f"{self.token}"}
             ) as response:
                 result_booking = await response.json()
-                _LOGGER.info("------------- type des bookings 1 --------------")
                 return {json.dumps(result_booking)}  # Adjust as needed
     
     async def async_get_planning(self):
@@ -59,7 +56,7 @@ class Heitzfit4API:
         bookings = await self.async_get_booking()
         async with aiohttp.ClientSession() as session:
             async with session.get(
-                f"https://app.heitzfit.com/c/3649/ws/api/planning/browse?startDate={date_of_day}&numberOfDays=6&idActivities=&idEmployees=&idRooms=&idGroups=&hourStart=&hourEnd=&stackBy=date&caloriesMin=&caloriesMax=&idCenter=3649",
+                f"https://app.heitzfit.com/c/3649/ws/api/planning/browse?startDate={date_of_day}&numberOfDays={self.nbDays}&idActivities=&idEmployees=&idRooms=&idGroups=&hourStart=&hourEnd=&stackBy=date&caloriesMin=&caloriesMax=&idCenter=3649",
                 headers={"Authorization": f"Bearer {self.token}"}
             ) as response:
                 planning_days = await response.json()
@@ -97,7 +94,7 @@ def add_booked_flag(planning_data, booking_data):
 def filter_fields(data):
     # deletion of fields that are not needed
     fields_to_remove = {
-        "idRoom", "idEmployee", "employee", "idGroup", "idCenter", "calories", "deleted", "overlapped", "idActivity","manualPlaces","color",
+        "idRoom", "idEmployee", "employee", "idGroup", "idCenter", "calories", "overlapped", "idActivity","manualPlaces","color",
         "_roomAuthorizedToCtr", "_taskAuthorizedToCtr", "bestContrast", "_task", "_room", "_group"
     }
 

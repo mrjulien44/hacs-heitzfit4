@@ -15,6 +15,10 @@ HACS > Integrations > **heitzfit4**
 
 Copy the `heitzfit4` folder from latest release to the `custom_components` folder in your `config` folder.
 
+## Goal
+
+The heitzfit4 integration is used to get your planning and booked activities from your sport center
+.
 ## Configuration
 
 Click on the following button:  
@@ -25,7 +29,7 @@ Settings > Devices & Sevices > Integrations > Add Integration, and search for "h
 
 You can choose between two options when adding a config entry.  
 
-### using username and password
+### using 3 parameters : username, password and id of your club
 
 Use your heitzfit4 with username, password and Club Id:  
 ![heitzfit4 config flow](doc/config_flow_username_password.png)
@@ -44,7 +48,7 @@ The sensors are updated every 120 minutes.
 
 Use a markdown card for now
 
-Sample for planning
+Sample for planning :
 
 ```
 {%- set days = state_attr('sensor.heitzfit4_planning', 'planning') -%} {%- for day in days -%}
@@ -61,7 +65,7 @@ Sample for planning
 ```
 ![heitzfit4 planning detail](doc/planning.png)
 
-Sample for booking
+Sample for booking :
 
 ```
 {%- set days = state_attr('sensor.heitzfit4_planning', 'planning') -%} {%- for day in days -%}
@@ -76,4 +80,9 @@ Sample for booking
   {%- endfor -%}
 {%- endfor -%}
 ```
-![heitzfit4 planning detail](doc/booking.png)
+![heitzfit4 booking detail](doc/bookings.png)
+
+
+## Removing the integration
+
+This integration follows standard integration removal. No extra steps are required.

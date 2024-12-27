@@ -6,14 +6,16 @@
         "title": "Configuration de Heitzfit4",
         "description": "Configuration de Heitzfit4",
         "data": {
-          "club": "Numéro du centre",
-          "username": "Mtilisateur",
-          "password": "Mot de passe"
+          "club": "Club",
+          "username": "Utilisateur",
+          "password": "Mot de passe",
+          "nbDays": "Nombre de jours à récupérer"
         },
         "data_description": {
           "club": "Numéro du centre",
           "username": "Utilisateur",
-          "password": "Mot de passe"
+          "password": "Mot de passe",
+          "nbDays": "Nombre de jours à récupérer"
         }
       }
     },
@@ -29,10 +31,19 @@
   "options": {
     "step": {
       "init": {
-        "description": "Customize the way the integration works",
+        "title": "Configuration de Heitzfit4",
+        "description": "Configuration de Heitzfit4",
         "data": {
-          "refresh_interval": "Data refresh interval (in minutes)",
-          "alarm_offset": "Time delta for alarm (in minutes, before first booked activity of the day)"
+          "club": "Club",
+          "username": "Utilisateur",
+          "password": "Mot de passe",
+          "nbDays": "Nombre de jours à récupérer"
+        },
+        "data_description": {
+          "club": "Numéro du centre",
+          "username": "Utilisateur",
+          "password": "Mot de passe",
+          "nbDays": "Nombre de jours à récupérer"
         }
       }
     }
