@@ -59,7 +59,7 @@ class Heitzfit4API:
         bookings = await self.async_get_booking()
         async with aiohttp.ClientSession() as session:
             async with session.get(
-                f"https://app.heitzfit.com/c/3649/ws/api/planning/browse?startDate={date_of_day}&numberOfDays=4&idActivities=&idEmployees=&idRooms=&idGroups=&hourStart=&hourEnd=&stackBy=date&caloriesMin=&caloriesMax=&idCenter=3649",
+                f"https://app.heitzfit.com/c/3649/ws/api/planning/browse?startDate={date_of_day}&numberOfDays=6&idActivities=&idEmployees=&idRooms=&idGroups=&hourStart=&hourEnd=&stackBy=date&caloriesMin=&caloriesMax=&idCenter=3649",
                 headers={"Authorization": f"Bearer {self.token}"}
             ) as response:
                 planning_days = await response.json()

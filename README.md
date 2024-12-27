@@ -36,11 +36,44 @@ Use your heitzfit4 with username, password and Club Id:
 | Sensor | Description |
 |--------|-------------|
 | `sensor.heitzfit4_planning` | Planning for coming days |
-| `sensor.heitzfit4_booking` | Booking |
 
 
-The sensors are updated every 15 minutes.
+The sensors are updated every 120 minutes.
 
 ## Cards
 
-Cards are available here: https://github.com/mrjulien44/lovelace-heitzfit4
+Use a markdown card for now
+
+Sample for planning
+
+```
+{%- set days = state_attr('sensor.heitzfit4_planning', 'planning') -%} {%- for day in days -%}
+  <h2><ha-icon icon="mdi:calendar-today"></ha-icon> {{as_timestamp(day) | timestamp_custom('%d %b') + ' (' + as_timestamp(day) | timestamp_custom('%A') + ')'}}</h2>
+  {%- for activities in days[day] -%}
+    {%- set places = activities.placesTaken | string + "/" + activities.placesMax | string -%}
+    {%- set booking = "info" -%}
+    {%- if activities.booked %}
+      {%- set booking = "success" -%}
+    {%- endif -%}
+      <ha-alert title="{{as_timestamp(activities.start) | timestamp_custom('%R') + '&nbsp;&nbsp;' + activities.activity + '&nbsp;&nbsp;(' + places + ')'}}" alert-type="{{booking}}">{{'&nbsp;&nbsp;&nbsp;@&nbsp;' + activities.room}}</ha-alert>
+  {%- endfor -%}
+{%- endfor -%}
+```
+![heitzfit4 planning detail](doc/planning.png)
+
+Sample for booking
+
+```
+{%- set days = state_attr('sensor.heitzfit4_planning', 'planning') -%} {%- for day in days -%}
+  <h2><ha-icon icon="mdi:calendar-today"></ha-icon> {{as_timestamp(day) | timestamp_custom('%d %b')}}{{' (' + as_timestamp(day) | timestamp_custom('%A') + ')'}}</h2>
+  {%- for activities in days[day] -%}
+    {%- set places = activities.placesTaken | string + "/" + activities.placesMax | string -%}
+    {%- set booking = "info" -%}
+    {%- if activities.booked %}
+      {%- set booking = "success" -%}
+      <ha-alert title="{{as_timestamp(activities.start) | timestamp_custom('%R') + '&nbsp;&nbsp;' + activities.activity + '&nbsp;&nbsp;(' + places + ')'}}" alert-type="{{booking}}">{{'&nbsp;&nbsp;&nbsp;@&nbsp;' + activities.room}}</ha-alert>
+    {%- endif -%}
+  {%- endfor -%}
+{%- endfor -%}
+```
+![heitzfit4 planning detail](doc/booking.png)
