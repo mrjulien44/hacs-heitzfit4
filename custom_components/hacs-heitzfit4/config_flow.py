@@ -1,6 +1,7 @@
 import voluptuous as vol
 from homeassistant import config_entries
 from homeassistant.core import callback
+import homeassistant.helpers.config_validation as cv
 
 from .const import DOMAIN
 
@@ -21,7 +22,7 @@ class Heitzfit4ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 vol.Required("club"): str,
                 vol.Required("username"): str,
                 vol.Required("password"): str,
-                vol.Required("nbDays"): str,
+                vol.Required("nbDays", default=32): cv.positive_int,
             })
         )
 

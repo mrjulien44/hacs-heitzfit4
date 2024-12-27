@@ -10,12 +10,6 @@
           "username": "Utilisateur",
           "password": "Mot de passe",
           "nbDays": "Nombre de jours à récupérer"
-        },
-        "data_description": {
-          "club": "Numéro du centre",
-          "username": "Utilisateur",
-          "password": "Mot de passe",
-          "nbDays": "Nombre de jours à récupérer"
         }
       }
     },
@@ -35,12 +29,6 @@
         "description": "Configuration de Heitzfit4",
         "data": {
           "club": "Club",
-          "username": "Utilisateur",
-          "password": "Mot de passe",
-          "nbDays": "Nombre de jours à récupérer"
-        },
-        "data_description": {
-          "club": "Numéro du centre",
           "username": "Utilisateur",
           "password": "Mot de passe",
           "nbDays": "Nombre de jours à récupérer"

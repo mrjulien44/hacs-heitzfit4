@@ -10,12 +10,6 @@
             "username": "Usuario",
             "password": "Contraseña",
             "nbDays": "Número de días para recuperarse"
-          },
-          "data_description": {
-            "club": "número de club",
-            "username": "Usuario",
-            "password": "Contraseña",
-            "nbDays": "Número de días para recuperarse"
           }
         }
       },
@@ -34,12 +28,6 @@
           "title": "Configuración de Heitzfit4",
           "description": "Configuración de Heitzfit4",
           "data": {
-            "club": "número de club",
-            "username": "Usuario",
-            "password": "Contraseña",
-            "nbDays": "Número de días para recuperarse"
-          },
-          "data_description": {
             "club": "número de club",
             "username": "Usuario",
             "password": "Contraseña",

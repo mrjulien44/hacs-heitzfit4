@@ -10,12 +10,6 @@
             "username": "User",
             "password": "Passwrod",
             "nbDays": "Number of days to collect"
-          },
-          "data_description": {
-            "club": "Center",
-            "username": "User",
-            "password": "Passwrod",
-            "nbDays": "Number of days to collect"
           }
         }
       },
@@ -37,12 +31,6 @@
             "club": "Center",
             "username": "User",
             "password": "Passwrod",
-            "nbDays": "Number of days to collect"
-          },
-          "data_description": {
-            "club": "Center",
-            "username": "User",
-            "password": "Password",
             "nbDays": "Number of days to collect"
           }
         }
