@@ -22,7 +22,7 @@ class Heitzfit4ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 vol.Required("club"): str,
                 vol.Required("username"): str,
                 vol.Required("password"): str,
-                vol.Required("nbDays", default=32): cv.positive_int,
+                vol.Required("nbdays", default=6): cv.positive_int
             })
         )
 
@@ -48,6 +48,6 @@ class Heitzfit4OptionsFlowHandler(config_entries.OptionsFlow):
                 vol.Required("club", default=self.config_entry.data.get("club")): str,
                 vol.Required("username", default=self.config_entry.data.get("username")): str,
                 vol.Required("password", default=self.config_entry.data.get("password")): str,
-                vol.Required("nbDays", default=self.config_entry.data.get("nbDays")): str,
+                vol.Required("nbdays", default=self.config_entry.data.get("nbdays")): str,
             })
         )

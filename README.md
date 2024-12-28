@@ -4,7 +4,7 @@
 
 ### Using HACS
 
-[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=mrjulien44s&repository=hacs-heitzfit4&category=integration)
+[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=mrjulien44&repository=hacs-heitzfit4&category=integration)
 
 OR
 
@@ -51,17 +51,28 @@ Use a markdown card for now
 Sample for planning :
 
 ```
-{%- set days = state_attr('sensor.heitzfit4_planning', 'planning') -%} {%- for day in days -%}
-  <h2><ha-icon icon="mdi:calendar-today"></ha-icon> {{as_timestamp(day) | timestamp_custom('%d %b') + ' (' + as_timestamp(day) | timestamp_custom('%A') + ')'}}</h2>
-  {%- for activities in days[day] -%}
-    {%- set places = activities.placesTaken | string + "/" + activities.placesMax | string -%}
-    {%- set booking = "info" -%}
-    {%- if activities.booked %}
-      {%- set booking = "success" -%}
-    {%- endif -%}
-      <ha-alert title="{{as_timestamp(activities.start) | timestamp_custom('%R') + '&nbsp;&nbsp;' + activities.activity + '&nbsp;&nbsp;(' + places + ')'}}" alert-type="{{booking}}">{{'&nbsp;&nbsp;&nbsp;@&nbsp;' + activities.room}}</ha-alert>
+type: markdown
+content: >-
+  <h2><img src = '/local/images/logo_globalfit.png' alt='GlobalFit Club'
+  align='middle' height='50px'> Planning</h2> {%- set days =
+  state_attr('sensor.heitzfit4_planning', 'planning') -%} {%- for day in days
+  -%}
+    <h2><ha-icon icon="mdi:calendar-today"></ha-icon> {{as_timestamp(day) | timestamp_custom('%d %b') + ' (' + as_timestamp(day) | timestamp_custom('%A') + ')'}}</h2>
+    {%- for activities in days[day] -%}
+      {%- if activities.deleted == False%}
+        {%- if activities.placesTaken | int == activities.placesMax | int -%}
+          {%- set places = "<font color='#c83110'>(" + activities.placesTaken | string + "/" + activities.placesMax | string + ")</font>" -%}
+        {%- else -%}
+          {%- set places = "(" + activities.placesTaken | string + "/" + activities.placesMax | string + ")"-%}
+        {%- endif -%}
+        {%- set booking = "info" -%}
+        {%- if activities.booked %}
+          {%- set booking = "success" -%}
+        {%- endif -%}
+          <ha-alert title="{{as_timestamp(activities.start) | timestamp_custom('%R') + '&nbsp;&nbsp;' + activities.activity}}" alert-type="{{booking}}">{{'&nbsp;&nbsp;&nbsp;@&nbsp;' + activities.room + '&nbsp;&nbsp;&nbsp;&nbsp;' + places}}</ha-alert>
+      {%- endif -%}
+    {%- endfor -%}
   {%- endfor -%}
-{%- endfor -%}
 ```
 ![heitzfit4 planning detail](doc/planning.png)
 

@@ -19,11 +19,11 @@ from .const import (
 _LOGGER = logging.getLogger(__name__)
 
 class Heitzfit4API:
-    def __init__(self, club, username, password, nbDays):
+    def __init__(self, club, username, password, nbdays):
         self.club = club
         self.username = username
         self.password = password
-        self.nbDays = nbDays
+        self.nbdays = nbdays
         self.token = None
         self.clientId = None
 
@@ -45,7 +45,7 @@ class Heitzfit4API:
     async def async_get_booking(self):
         async with aiohttp.ClientSession() as session:
             async with session.get(
-                f"https://app.heitzfit.com/c/3649/ws/api/planning/book?idClient={self.nbDays}&viewMode=0&familyActive=&familyIdClient=&familyCreatedBySelf=&include=",
+                f"https://app.heitzfit.com/c/3649/ws/api/planning/book?idClient={self.nbdays}&viewMode=0&familyActive=&familyIdClient=&familyCreatedBySelf=&include=",
                 headers={"Authorization": f"{self.token}"}
             ) as response:
                 result_booking = await response.json()
@@ -56,7 +56,7 @@ class Heitzfit4API:
         bookings = await self.async_get_booking()
         async with aiohttp.ClientSession() as session:
             async with session.get(
-                f"https://app.heitzfit.com/c/3649/ws/api/planning/browse?startDate={date_of_day}&numberOfDays={self.nbDays}&idActivities=&idEmployees=&idRooms=&idGroups=&hourStart=&hourEnd=&stackBy=date&caloriesMin=&caloriesMax=&idCenter=3649",
+                f"https://app.heitzfit.com/c/3649/ws/api/planning/browse?startDate={date_of_day}&numberOfDays={self.nbdays}&idActivities=&idEmployees=&idRooms=&idGroups=&hourStart=&hourEnd=&stackBy=date&caloriesMin=&caloriesMax=&idCenter=3649",
                 headers={"Authorization": f"Bearer {self.token}"}
             ) as response:
                 planning_days = await response.json()

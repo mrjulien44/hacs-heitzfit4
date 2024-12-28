@@ -9,7 +9,7 @@
             "club": "Center",
             "username": "User",
             "password": "Passwrod",
-            "nbDays": "Number of days to collect"
+            "nbdays": "Number of days to collect"
           }
         }
       },
@@ -31,7 +31,7 @@
             "club": "Center",
             "username": "User",
             "password": "Passwrod",
-            "nbDays": "Number of days to collect"
+            "nbdays": "Number of days to collect"
           }
         }
       }

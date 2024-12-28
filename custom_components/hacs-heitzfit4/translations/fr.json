@@ -9,7 +9,7 @@
             "club": "Club",
             "username": "Utilisateur",
             "password": "Mot de passe",
-            "nbDays": "Nombre de jours à récupérer"
+            "nbdays": "Nombre de jours à récupérer"
           }
         }
       },
@@ -31,7 +31,7 @@
             "club": "Club",
             "username": "Utilisateur",
             "password": "Mot de passe",
-            "nbDays": "Nombre de jours à récupérer"
+            "nbdays": "Nombre de jours à récupérer"
           }
         }
       }

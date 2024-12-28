@@ -51,7 +51,7 @@ class Heitzfit4DataUpdateCoordinator(DataUpdateCoordinator):
         """Initialize."""
         self.hass = hass
         self.entry = entry
-        self.api = Heitzfit4API(entry.data["club"], entry.data["username"], entry.data["password"], entry.data["nbDays"])
+        self.api = Heitzfit4API(entry.data["club"], entry.data["username"], entry.data["password"], entry.data["nbdays"])
         # self._attr_name = entry.get("name")
         # self._attr_unique_id = entry.get("entity_id")
         self._attr_has_entity_name = True
