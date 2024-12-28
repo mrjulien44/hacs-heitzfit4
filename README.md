@@ -29,7 +29,7 @@ Settings > Devices & Sevices > Integrations > Add Integration, and search for "h
 
 You can choose between two options when adding a config entry.  
 
-### using 3 parameters : username, password and id of your club
+### using 4 parameters : id of your club, username, password and number of days for planning
 
 Use your heitzfit4 with username, password and Club Id:  
 ![heitzfit4 config flow](doc/config_flow_username_password.png)
