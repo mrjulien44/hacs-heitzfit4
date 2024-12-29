@@ -5,11 +5,11 @@
     "@mrjulien44"
   ],
   "config_flow": true,
+  "dependencies": [],
   "documentation": "https://github.com/mrjulien44/hacs-heitzfit4",
   "iot_class": "cloud_polling",
   "issue_tracker": "https://github.com/mrjulien44/hacs-heitzfit4/issues",
+  "quality_scale": "bronze",
   "requirements": [],
-  "dependencies": [],
-  "version": "0.9.9",
-  "quality_scale": "bronze"
+  "version": "0.9.9"
 }
