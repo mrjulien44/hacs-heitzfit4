@@ -2,7 +2,7 @@
   "domain": "hacs-heitzfit4",
   "name": "heitzfit4",
   "codeowners": [
-    "mrjulien44"
+    "@mrjulien44"
   ],
   "config_flow": true,
   "documentation": "https://github.com/mrjulien44/hacs-heitzfit4",
