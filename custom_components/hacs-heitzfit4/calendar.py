@@ -137,8 +137,7 @@ from homeassistant.util.dt import get_time_zone
 from zoneinfo import ZoneInfo
 
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
-from .coordinator import PronoteDataUpdateCoordinator
-from .pronote_formatter import format_displayed_lesson
+from .coordinator import Heitzfit4DataUpdateCoordinator
 
 from .const import DOMAIN
 
