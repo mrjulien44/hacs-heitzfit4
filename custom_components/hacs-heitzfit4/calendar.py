@@ -11,6 +11,7 @@ from .const import DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
 
+
 async def async_setup_entry(
     hass: HomeAssistant,
     config_entry: ConfigEntry,
@@ -20,16 +21,20 @@ async def async_setup_entry(
     # coordinator = hass.data[DOMAIN][config_entry.entry_id]["coordinator"]
     coordinator = hass.data[DOMAIN][config_entry.entry_id]
 
+    calendars = config_entry["calendars"]
+
     await coordinator.async_config_entry_first_refresh()
     # Call the function to update the calendar
     _LOGGER.info("CALENDAR ASYNC SETUP ENTRY coordinator.data")
     _LOGGER.info(coordinator.data["Planning"])
     await async_get_calendar_event_from_bookings(hass, coordinator.data["Planning"])
-    async_add_entities([Heitzfit4Calendar(coordinator, config_entry)], False)
+    # async_add_entities([Heitzfit4Calendar(coordinator, config_entry)], False)
+
+
 
 async def async_get_calendar_event_from_bookings(hass: HomeAssistant, planning_data: dict):
     calendar_component = hass.data.get(DOMAIN)
-    _LOGGER.info("CALENDAR async_get_calendar_event_from_bookings")
+    _LOGGER.info("CALENDAR async_get_calendar_event_from_bookings 1")
     _LOGGER.info(calendar_component)
     if not calendar_component:
         _LOGGER.info("CALENDAR async_get_calendar_event_from_bookings NOT IN CALENDAR")
@@ -49,6 +54,7 @@ async def async_get_calendar_event_from_bookings(hass: HomeAssistant, planning_d
     # await calendar_entity.async_update_events(planning_data)
 
     calendar_entity = Heitzfit4Calendar()
+    _LOGGER.info("CALENDAR async_get_calendar_event_from_bookings calendar_entity")
     await calendar_component.async_add_entities([calendar_entity])
     await calendar_entity.async_update_events(planning_data)
 
