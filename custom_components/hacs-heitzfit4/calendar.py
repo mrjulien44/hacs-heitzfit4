@@ -1,5 +1,5 @@
 import logging
-from homeassistant.components.calendar import CalendarEvent
+from homeassistant.components.calendar import CalendarEvent, CalendarEntity
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_component import EntityComponent
 from homeassistant.helpers.entity import Entity
@@ -27,29 +27,30 @@ async def async_setup_entry(
     await async_get_calendar_event_from_bookings(hass, coordinator.data["Planning"])
     async_add_entities([Heitzfit4Calendar(coordinator, config_entry)], False)
 
-async def async_get_calendar_event_from_bookings(hass: HomeAssistant, planning_data: dict):
+async def async_get_calendar_event_from_bookings(hass: HomeAssistant, planning_data: dict, CalendarEntity):
     calendar_component = hass.data.get(DOMAIN)
     _LOGGER.info("CALENDAR async_get_calendar_event_from_bookings")
+    _LOGGER.info(calendar_component)
     if not calendar_component:
+        _LOGGER.info("CALENDAR async_get_calendar_event_from_bookings NOT IN CALENDAR")
         calendar_component = EntityComponent(_LOGGER, DOMAIN, hass)
         hass.data[DOMAIN] = calendar_component
-    _LOGGER.info(async_get_calendar_event_from_bookings)
 
     # Check if the calendar entity already exists
-    calendar_entity = next(
-        (entity for entity in calendar_component.entities if entity.name == "Heitzfit4"), 
-        None
-    )
+    # calendar_entity = next(
+    #     (entity for entity in calendar_component.entities if entity.name == "Heitzfit4"), 
+    #     None
+    # )
 
-    if not calendar_entity:
-        calendar_entity = Heitzfit4Calendar()
-        await calendar_component.async_add_entities([calendar_entity])
+    # if not calendar_entity:
+    #     calendar_entity = Heitzfit4Calendar()
+    #     await calendar_component.async_add_entities([calendar_entity])
 
-    await calendar_entity.async_update_events(planning_data)
-
-    # calendar_entity = Heitzfit4Calendar()
-    # await calendar_component.async_add_entities([calendar_entity])
     # await calendar_entity.async_update_events(planning_data)
+
+    calendar_entity = Heitzfit4Calendar()
+    await calendar_component.async_add_entities([calendar_entity])
+    await calendar_entity.async_update_events(planning_data)
 
 class Heitzfit4Calendar(Entity):
     _LOGGER.info("CALENDAR Heitzfit4Calendar")
