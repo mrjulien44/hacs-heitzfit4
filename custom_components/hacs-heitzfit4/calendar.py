@@ -137,7 +137,7 @@ from homeassistant.util.dt import get_time_zone
 from zoneinfo import ZoneInfo
 
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
-from .coordinator import Heitzfit4DataUpdateCoordinator
+# from .init import Heitzfit4DataUpdateCoordinator
 
 from .const import DOMAIN
 
@@ -148,9 +148,7 @@ async def async_setup_entry(
     async_add_entities: AddEntitiesCallback,
 ) -> None:
     """Set up ReCollect Waste sensors based on a config entry."""
-    # coordinator: PronoteDataUpdateCoordinator = hass.data[DOMAIN][
-    #     config_entry.entry_id
-    # ]["coordinator"]
+    # coordinator: Heitzfit4DataUpdateCoordinator = hass.data[DOMAIN][config_entry.entry_id]["coordinator"]
     coordinator = hass.data[DOMAIN][config_entry.entry_id]
     await coordinator.async_config_entry_first_refresh()
 
