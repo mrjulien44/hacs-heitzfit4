@@ -49,8 +49,8 @@ async def async_setup_entry(
     for platform in PLATFORMS:
         hass.async_add_executor_job(
             hass.config_entries.async_forward_entry_setup(entry, platform)
-            _LOGGER.info("Forwarding entry setup for %s", platform)
         )
+        _LOGGER.info("Forwarding entry setup for %s", platform)
 
     return True
 
