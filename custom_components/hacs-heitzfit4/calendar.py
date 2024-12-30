@@ -21,7 +21,7 @@ async def async_setup_entry(
     # coordinator = hass.data[DOMAIN][config_entry.entry_id]["coordinator"]
     coordinator = hass.data[DOMAIN][config_entry.entry_id]
 
-    calendars = config_entry["calendars"]
+    # calendars = config_entry["calendars"]
 
     await coordinator.async_config_entry_first_refresh()
     # Call the function to update the calendar
