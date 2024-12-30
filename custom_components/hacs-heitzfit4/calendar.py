@@ -28,11 +28,11 @@ async def async_setup_entry(
     _LOGGER.info("CALENDAR ASYNC SETUP ENTRY coordinator.data")
     _LOGGER.info(coordinator.data["Planning"])
     await async_get_calendar_event_from_bookings(hass, coordinator.data["Planning"])
-    # async_add_entities([Heitzfit4Calendar(coordinator, config_entry)], False)
+    async_add_entities([Heitzfit4Calendar(coordinator, config_entry)], False)
 
 
 
-async def async_get_calendar_event_from_bookings(hass: HomeAssistant, planning_data: dict):
+async def async_get_calendar_event_from_bookings(hass: HomeAssistant, planning_data: dict, async_add_entities: AddEntitiesCallback):
     calendar_component = hass.data.get(DOMAIN)
     _LOGGER.info("CALENDAR async_get_calendar_event_from_bookings 1")
     _LOGGER.info(calendar_component)
@@ -55,10 +55,13 @@ async def async_get_calendar_event_from_bookings(hass: HomeAssistant, planning_d
 
     calendar_entity = Heitzfit4Calendar()
     _LOGGER.info("CALENDAR async_get_calendar_event_from_bookings calendar_entity")
-    await calendar_component.async_add_entities([calendar_entity])
+    _LOGGER.info(calendar_entity)
+    async_add_entities([calendar_entity])
     await calendar_entity.async_update_events(planning_data)
 
-class Heitzfit4Calendar(Entity):
+
+
+class Heitzfit4Calendar(Entity,CalendarEntity):
     _LOGGER.info("CALENDAR Heitzfit4Calendar")
     def __init__(self, coordinator=None, config_entry=None):
         self._events = []
