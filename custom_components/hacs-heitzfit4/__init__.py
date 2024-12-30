@@ -11,7 +11,7 @@ from .const import DOMAIN, PLATFORMS
 
 _LOGGER = logging.getLogger(__name__)
 
-PLATFORMS = ["sensor", "Calendar"]
+PLATFORMS = ["sensor", "calendar"]
 
 
 async def async_migrate_entry(hass, config_entry: ConfigEntry) -> bool:
@@ -49,6 +49,7 @@ async def async_setup_entry(
     for platform in PLATFORMS:
         hass.async_add_executor_job(
             hass.config_entries.async_forward_entry_setup(entry, platform)
+            _LOGGER.info("Forwarding entry setup for %s", platform)
         )
 
     return True
