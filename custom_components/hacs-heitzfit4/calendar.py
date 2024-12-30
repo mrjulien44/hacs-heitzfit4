@@ -4,7 +4,6 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_component import EntityComponent
 from homeassistant.helpers.entity import Entity
 from homeassistant.helpers.event import async_track_time_interval
-from homeassistant.components.telegram_bot import async_send_message
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
@@ -22,12 +21,14 @@ async def async_setup_entry(
 
     await coordinator.async_config_entry_first_refresh()
     # Call the function to update the calendar
+    _LOGGER.info("CALENDAR ASYNC SETUP ENTRY coordinator.data")
     _LOGGER.info(coordinator.data["Planning"])
     await async_get_calendar_event_from_bookings(hass, coordinator.data["Planning"])
     async_add_entities([Heitzfit4Calendar(coordinator, config_entry)], False)
 
 async def async_get_calendar_event_from_bookings(hass: HomeAssistant, planning_data: dict):
     calendar_component = hass.data.get(DOMAIN)
+    _LOGGER.info("CALENDAR async_get_calendar_event_from_bookings")
     if not calendar_component:
         calendar_component = EntityComponent(_LOGGER, DOMAIN, hass)
         hass.data[DOMAIN] = calendar_component
@@ -45,14 +46,12 @@ async def async_get_calendar_event_from_bookings(hass: HomeAssistant, planning_d
 
     await calendar_entity.async_update_events(planning_data)
 
-
-
-    calendar_entity = Heitzfit4Calendar()
-    await calendar_component.async_add_entities([calendar_entity])
-
-    await calendar_entity.async_update_events(planning_data)
+    # calendar_entity = Heitzfit4Calendar()
+    # await calendar_component.async_add_entities([calendar_entity])
+    # await calendar_entity.async_update_events(planning_data)
 
 class Heitzfit4Calendar(Entity):
+    _LOGGER.info("CALENDAR Heitzfit4Calendar")
     def __init__(self, coordinator=None, config_entry=None):
         self._events = []
         self.coordinator = coordinator
@@ -71,6 +70,7 @@ class Heitzfit4Calendar(Entity):
         return {"events": self._events}
 
     async def async_update_events(self, planning_data):
+        _LOGGER.info("CALENDAR async_update_events")
         new_events = []
         for date, activities in planning_data.items():
             for activity in activities:
