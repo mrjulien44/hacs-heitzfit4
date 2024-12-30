@@ -27,7 +27,7 @@ async def async_setup_entry(
     await async_get_calendar_event_from_bookings(hass, coordinator.data["Planning"])
     async_add_entities([Heitzfit4Calendar(coordinator, config_entry)], False)
 
-async def async_get_calendar_event_from_bookings(hass: HomeAssistant, planning_data: dict, CalendarEntity):
+async def async_get_calendar_event_from_bookings(hass: HomeAssistant, planning_data: dict):
     calendar_component = hass.data.get(DOMAIN)
     _LOGGER.info("CALENDAR async_get_calendar_event_from_bookings")
     _LOGGER.info(calendar_component)
