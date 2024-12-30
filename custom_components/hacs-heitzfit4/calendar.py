@@ -61,7 +61,7 @@ async def async_get_calendar_event_from_bookings(hass: HomeAssistant, planning_d
 
 
 
-class Heitzfit4Calendar(Entity,CalendarEntity):
+class Heitzfit4Calendar(Entity):
     _LOGGER.info("CALENDAR Heitzfit4Calendar")
     def __init__(self, coordinator=None, config_entry=None):
         self._events = []

@@ -33,7 +33,7 @@ class Heitzfit4Sensor(CoordinatorEntity, SensorEntity):
     @property
     def icon(self) -> str | None:
         """Return the icon of the sensor."""
-        return "mdi:WeightLifter"
+        return "mdi:weight-lifter"
 
     @property
     def state(self):
