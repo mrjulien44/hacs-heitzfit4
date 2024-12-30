@@ -22,6 +22,7 @@ async def async_setup_entry(
 
     await coordinator.async_config_entry_first_refresh()
     # Call the function to update the calendar
+    _LOGGER.info(coordinator.data["Planning"])
     await async_get_calendar_event_from_bookings(hass, coordinator.data["Planning"])
     async_add_entities([Heitzfit4Calendar(coordinator, config_entry)], False)
 
@@ -30,6 +31,21 @@ async def async_get_calendar_event_from_bookings(hass: HomeAssistant, planning_d
     if not calendar_component:
         calendar_component = EntityComponent(_LOGGER, DOMAIN, hass)
         hass.data[DOMAIN] = calendar_component
+    _LOGGER.info(async_get_calendar_event_from_bookings)
+
+    # Check if the calendar entity already exists
+    calendar_entity = next(
+        (entity for entity in calendar_component.entities if entity.name == "Heitzfit4"), 
+        None
+    )
+
+    if not calendar_entity:
+        calendar_entity = Heitzfit4Calendar()
+        await calendar_component.async_add_entities([calendar_entity])
+
+    await calendar_entity.async_update_events(planning_data)
+
+
 
     calendar_entity = Heitzfit4Calendar()
     await calendar_component.async_add_entities([calendar_entity])
@@ -67,6 +83,7 @@ class Heitzfit4Calendar(Entity):
                         uid=str(activity["idActivity"])
                     )
                     new_events.append(event)
+                    _LOGGER.info("New event: %s (UID: %s)", event.summary, event.uid)
 
         # Check for events to delete
         current_uids = {event.uid for event in self._events}
@@ -81,9 +98,9 @@ class Heitzfit4Calendar(Entity):
 
     async def async_delete_event(self, event):
         self._events.remove(event)
-        _LOGGER("Deleted event: %s (UID: %s)", event.summary, event.uid)
-        await async_send_message(
-            self.hass,
-            "telegram_bot",
-            f"Deleted event: {event.summary} (UID: {event.uid})"
-        )
+        _LOGGER.info("Deleted event: %s (UID: %s)", event.summary, event.uid)
+        # await async_send_message(
+        #     self.hass,
+        #     "telegram_bot",
+        #     f"Deleted event: {event.summary} (UID: {event.uid})"
+        # )
