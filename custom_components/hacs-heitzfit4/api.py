@@ -93,7 +93,7 @@ def add_booked_flag(planning_data, booking_data):
 def filter_fields(data):
     # deletion of fields that are not needed
     fields_to_remove = {
-        "idRoom", "idEmployee", "employee", "idGroup", "idCenter", "calories", "overlapped", "idActivity","manualPlaces","color",
+        "idRoom", "idEmployee", "employee", "idGroup", "idCenter", "calories", "overlapped","manualPlaces","color",
         "_roomAuthorizedToCtr", "_taskAuthorizedToCtr", "bestContrast", "_task", "_room", "_group"
     }
 
