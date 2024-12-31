@@ -168,13 +168,22 @@ def async_get_calendar_event_from_bookings(planning_data, timezone) -> CalendarE
             if activity.get("booked"):
                 _LOGGER.info("CALENDAR async_get_calendar_event_from_bookings")
                 _LOGGER.info(planning_data)
-                return CalendarEvent(
-                    summary=activity["activity"],
-                    description=activity["activity"],
+                # return CalendarEvent(
+                #     summary=f"{activity["activity"]}",
+                #     description=f"{activity["activity"]} - {activity["room"]} ({activity["duration"]})",
+                #     start=activity["start"],
+                #     end=activity["end"],
+                #     uid=str(activity["idActivity"])
+                # )
+                event = CalendarEvent(
+                    summary=f"{activity["activity"]}",
+                    description=f"{activity["activity"]} - {activity["room"]} ({activity["duration"]})",
                     start=activity["start"],
                     end=activity["end"],
                     uid=str(activity["idActivity"])
                 )
+                new_events.append(event)
+    return new_events
 
 class Heitzfit4Calendar(CoordinatorEntity, CalendarEntity):
 
@@ -186,14 +195,8 @@ class Heitzfit4Calendar(CoordinatorEntity, CalendarEntity):
         """Initialize the ReCollect Waste entity."""
         super().__init__(coordinator, entry)
 
-        # child_info = coordinator.data["child_info"]
-        calendar_name = "Heitzfit4"
-        # nickname = self.coordinator.config_entry.options.get("nickname", "")
-        # if nickname != "":
-        #     calendar_name = nickname
 
-        # self._attr_translation_key = "timetable"
-        # self._attr_translation_placeholders = {"child": calendar_name}
+        calendar_name = "Heitzfit4"
         self._attr_unique_id = "Heitzfit4_calendar"
         self._attr_name = f"Reservation {calendar_name}"
         self._attr_device_info = DeviceInfo(
@@ -206,7 +209,12 @@ class Heitzfit4Calendar(CoordinatorEntity, CalendarEntity):
             model="Heitzfit4"
         )
         self._event: CalendarEvent | None = None
-
+    
+    @property
+    def icon(self) -> str | None:
+        """Return the icon of the sensor."""
+        return "mdi:weight-lifter"
+    
     @property
     def event(self) -> CalendarEvent | None:
         """Return the next upcoming event."""
