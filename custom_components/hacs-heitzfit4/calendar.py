@@ -1,4 +1,4 @@
-# import logging
+import logging
 # from homeassistant.components.calendar import CalendarEvent, CalendarEntity
 # from homeassistant.core import HomeAssistant
 # from homeassistant.helpers.entity_component import EntityComponent
@@ -141,6 +141,7 @@ from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .const import DOMAIN
 
+_LOGGER = logging.getLogger(__name__)
 
 async def async_setup_entry(
     hass: HomeAssistant,
@@ -233,17 +234,18 @@ class Heitzfit4Calendar(CoordinatorEntity, CalendarEntity):
 
         # super()._handle_coordinator_update()
 
-    # async def async_get_events(
-    #     self,
-    #     hass: HomeAssistant,
-    #     start_date: datetime,
-    #     end_date: datetime,
-    # ) -> list[CalendarEvent]:
-    #     """Return calendar events within a datetime range."""
-    #     return [
-    #         async_get_calendar_event_from_bookings(event, hass.config.time_zone)
-    #         for event in filter(
-    #             lambda lesson: lesson.canceled == False,
-    #             self.coordinator.data["bookings_period"],
-    #         )
-    #     ]
+    async def async_get_events(
+        self,
+        hass: HomeAssistant,
+        start_date: datetime,
+        end_date: datetime,
+    ) -> list[CalendarEvent]:
+        """Return calendar events within a datetime range."""
+        return [
+            async_get_calendar_event_from_bookings(self.coordinator.data["planning"], hass.config.time_zone)
+            # async_get_calendar_event_from_bookings(event, hass.config.time_zone)
+            # for event in filter(
+                # lambda lesson: lesson.canceled == False,
+                # self.coordinator.data["planning"],
+            # )
+        ]
