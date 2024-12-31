@@ -162,19 +162,19 @@ def async_get_calendar_event_from_bookings(planning_data, timezone) -> CalendarE
     tz = ZoneInfo(timezone)
 
     _LOGGER.info("CALENDAR async_update_events")
-    new_events = []
-    for date, activities in planning_data.items():
-        for activity in activities:
-            if activity.get("booked"):
-                _LOGGER.info("CALENDAR async_get_calendar_event_from_bookings")
-                _LOGGER.info(planning_data)
-                return CalendarEvent(
-                    summary=f"{activity["activity"]}",
-                    description=f"{activity["activity"]} - {activity["room"]} ({activity["duration"]})",
-                    start=activity["start"],
-                    end=activity["end"],
-                    uid=str(activity["idActivity"])
-                )
+    # new_events = []
+    # for date, activities in planning_data.items():
+    #     for activity in activities:
+    #         if activity.get("booked"):
+    #             _LOGGER.info("CALENDAR async_get_calendar_event_from_bookings")
+    #             _LOGGER.info(planning_data)
+    #             return CalendarEvent(
+    #                 summary=f"{activity["activity"]}",
+    #                 description=f"{activity["activity"]} - {activity["room"]} ({activity["duration"]})",
+    #                 start=activity["start"],
+    #                 end=activity["end"],
+    #                 uid=str(activity["idActivity"])
+    #             )
                 # event = CalendarEvent(
                 #     summary=f"{activity["activity"]}",
                 #     description=f"{activity["activity"]} - {activity["room"]} ({activity["duration"]})",
@@ -183,6 +183,15 @@ def async_get_calendar_event_from_bookings(planning_data, timezone) -> CalendarE
                 #     uid=str(activity["idActivity"])
                 # )
                 # new_events.append(event)
+    activity = planning_data
+    _LOGGER.info(activity)      
+    return CalendarEvent(
+        summary=f"{activity["activity"]}",
+        description=f"{activity["activity"]} - {activity["room"]} ({activity["duration"]})",
+        start=activity["start"],
+        end=activity["end"],
+        uid=str(activity["idActivity"])
+    )
 
 class Heitzfit4Calendar(CoordinatorEntity, CalendarEntity):
 
@@ -252,12 +261,15 @@ class Heitzfit4Calendar(CoordinatorEntity, CalendarEntity):
         for date, activities in self.coordinator.data["Planning"].items():
             for activity in activities:
                 if activity.get("booked"):
-                    _LOGGER.info("CALENDAR async_get_calendar_event_from_bookings")
-                    _LOGGER.info(planning_data)
+                    _LOGGER.info("CALENDAR async_get_calendar_event_from_bookings 2")
+                    _LOGGER.info(activity)
                     new_events.append(activity)
+        _LOGGER.info("CALENDAR get_events")
+        _LOGGER.info(new_events)
         return [
             # async_get_calendar_event_from_bookings(self.coordinator.data["Planning"], hass.config.time_zone)
             async_get_calendar_event_from_bookings(event, hass.config.time_zone)
-            for event in self.coordinator.data["planning"]
+            # for event in self.coordinator.data["planning"]
+            for event in new_events
 
         ]
