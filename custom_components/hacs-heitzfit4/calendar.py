@@ -168,22 +168,21 @@ def async_get_calendar_event_from_bookings(planning_data, timezone) -> CalendarE
             if activity.get("booked"):
                 _LOGGER.info("CALENDAR async_get_calendar_event_from_bookings")
                 _LOGGER.info(planning_data)
-                # return CalendarEvent(
-                #     summary=f"{activity["activity"]}",
-                #     description=f"{activity["activity"]} - {activity["room"]} ({activity["duration"]})",
-                #     start=activity["start"],
-                #     end=activity["end"],
-                #     uid=str(activity["idActivity"])
-                # )
-                event = CalendarEvent(
+                return CalendarEvent(
                     summary=f"{activity["activity"]}",
                     description=f"{activity["activity"]} - {activity["room"]} ({activity["duration"]})",
                     start=activity["start"],
                     end=activity["end"],
                     uid=str(activity["idActivity"])
                 )
-                new_events.append(event)
-    return new_events
+                # event = CalendarEvent(
+                #     summary=f"{activity["activity"]}",
+                #     description=f"{activity["activity"]} - {activity["room"]} ({activity["duration"]})",
+                #     start=activity["start"],
+                #     end=activity["end"],
+                #     uid=str(activity["idActivity"])
+                # )
+                # new_events.append(event)
 
 class Heitzfit4Calendar(CoordinatorEntity, CalendarEntity):
 
@@ -249,11 +248,16 @@ class Heitzfit4Calendar(CoordinatorEntity, CalendarEntity):
         end_date: datetime,
     ) -> list[CalendarEvent]:
         """Return calendar events within a datetime range."""
+        new_events=[]
+        for date, activities in self.coordinator.data["Planning"].items():
+            for activity in activities:
+                if activity.get("booked"):
+                    _LOGGER.info("CALENDAR async_get_calendar_event_from_bookings")
+                    _LOGGER.info(planning_data)
+                    new_events.append(activity)
         return [
-            async_get_calendar_event_from_bookings(self.coordinator.data["Planning"], hass.config.time_zone)
-            # async_get_calendar_event_from_bookings(event, hass.config.time_zone)
-            # for event in filter(
-                # lambda lesson: lesson.canceled == False,
-                # self.coordinator.data["planning"],
-            # )
+            # async_get_calendar_event_from_bookings(self.coordinator.data["Planning"], hass.config.time_zone)
+            async_get_calendar_event_from_bookings(event, hass.config.time_zone)
+            for event in self.coordinator.data["planning"]
+
         ]
