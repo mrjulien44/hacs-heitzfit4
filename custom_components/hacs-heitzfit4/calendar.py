@@ -242,7 +242,7 @@ class Heitzfit4Calendar(CoordinatorEntity, CalendarEntity):
     ) -> list[CalendarEvent]:
         """Return calendar events within a datetime range."""
         return [
-            async_get_calendar_event_from_bookings(self.coordinator.data["planning"], hass.config.time_zone)
+            async_get_calendar_event_from_bookings(self.coordinator.data["Planning"], hass.config.time_zone)
             # async_get_calendar_event_from_bookings(event, hass.config.time_zone)
             # for event in filter(
                 # lambda lesson: lesson.canceled == False,
