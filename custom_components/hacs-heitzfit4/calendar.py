@@ -125,21 +125,31 @@ import logging
 #  NEW VERSION
 
 
-
+import asyncio
+from ical.calendar import Calendar
+from ical.calendar_stream import IcsCalendarStream
+from ical.event import Event
+from ical.exceptions import CalendarParseError
+from ical.store import EventStore, EventStoreError
+from ical.types import Range, Recur
 
 from datetime import datetime
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.device_registry import DeviceEntryType, DeviceInfo
-from homeassistant.components.calendar import CalendarEntity, CalendarEvent
+from homeassistant.components.calendar import CalendarEntity, CalendarEntityFeature, CalendarEvent
 from homeassistant.util.dt import get_time_zone
+from homeassistant.util import dt as dt_util
+from homeassistant.exceptions import HomeAssistantError
 from zoneinfo import ZoneInfo
 
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 # from .init import Heitzfit4DataUpdateCoordinator
 
 from .const import DOMAIN
+from .store import LocalCalendarStore
+PRODID = "-//homeassistant.io//heitzfit4 1.0//EN"
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -148,9 +158,17 @@ async def async_setup_entry(
     config_entry: ConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ) -> None:
-    """Set up ReCollect Waste sensors based on a config entry."""
-    # coordinator: Heitzfit4DataUpdateCoordinator = hass.data[DOMAIN][config_entry.entry_id]["coordinator"]
     coordinator = hass.data[DOMAIN][config_entry.entry_id]
+
+    """Set up the local calendar platform."""
+    ics = await coordinator.async_load()
+    calendar: Calendar = await hass.async_add_executor_job(
+        IcsCalendarStream.calendar_from_ics, ics
+    )
+    calendar.prodid = PRODID
+
+    """Set up ReCollect Waste sensors based on a config entry."""
+    
     await coordinator.async_config_entry_first_refresh()
 
     async_add_entities([Heitzfit4Calendar(coordinator, config_entry)], False)
@@ -160,33 +178,10 @@ async def async_setup_entry(
 def async_get_calendar_event_from_bookings(planning_data, timezone) -> CalendarEvent:
     """Get a HASS CalendarEvent from a Pronote Lesson."""
     tz = ZoneInfo(timezone)
-
-    _LOGGER.info("CALENDAR async_update_events")
-    # new_events = []
-    # for date, activities in planning_data.items():
-    #     for activity in activities:
-    #         if activity.get("booked"):
-    #             _LOGGER.info("CALENDAR async_get_calendar_event_from_bookings")
-    #             _LOGGER.info(planning_data)
-    #             return CalendarEvent(
-    #                 summary=f"{activity["activity"]}",
-    #                 description=f"{activity["activity"]} - {activity["room"]} ({activity["duration"]})",
-    #                 start=activity["start"],
-    #                 end=activity["end"],
-    #                 uid=str(activity["idActivity"])
-    #             )
-                # event = CalendarEvent(
-                #     summary=f"{activity["activity"]}",
-                #     description=f"{activity["activity"]} - {activity["room"]} ({activity["duration"]})",
-                #     start=activity["start"],
-                #     end=activity["end"],
-                #     uid=str(activity["idActivity"])
-                # )
-                # new_events.append(event)
     activity = planning_data
     _LOGGER.info(activity)      
     return CalendarEvent(
-        summary=f"{activity["activity"]}",
+        summary=f"{activity["activity"]} ({activity["duration"]})",
         description=f"{activity["activity"]} - {activity["room"]} ({activity["duration"]})",
         start=activity["start"],
         end=activity["end"],
@@ -195,16 +190,22 @@ def async_get_calendar_event_from_bookings(planning_data, timezone) -> CalendarE
 
 class Heitzfit4Calendar(CoordinatorEntity, CalendarEntity):
 
+    _attr_supported_features = (
+        CalendarEntityFeature.DELETE_EVENT
+        | CalendarEntityFeature.UPDATE_EVENT
+    )
+
     def __init__(
         self,
         coordinator: CoordinatorEntity,
         entry: ConfigEntry,
+        store: LocalCalendarStore,
     ) -> None:
         """Initialize the ReCollect Waste entity."""
         super().__init__(coordinator, entry)
 
-
         calendar_name = "Heitzfit4"
+        self._store = coordinator
         self._attr_unique_id = "Heitzfit4_calendar"
         self._attr_name = f"Reservation {calendar_name}"
         self._attr_device_info = DeviceInfo(
@@ -216,6 +217,7 @@ class Heitzfit4Calendar(CoordinatorEntity, CalendarEntity):
             manufacturer="Heitzfit4",
             model="Heitzfit4"
         )
+        self._calendar_lock = asyncio.Lock()
         self._event: CalendarEvent | None = None
     
     @property
@@ -261,11 +263,7 @@ class Heitzfit4Calendar(CoordinatorEntity, CalendarEntity):
         for date, activities in self.coordinator.data["Planning"].items():
             for activity in activities:
                 if activity.get("booked"):
-                    _LOGGER.info("CALENDAR async_get_calendar_event_from_bookings 2")
-                    _LOGGER.info(activity)
                     new_events.append(activity)
-        _LOGGER.info("CALENDAR get_events")
-        _LOGGER.info(new_events)
         return [
             # async_get_calendar_event_from_bookings(self.coordinator.data["Planning"], hass.config.time_zone)
             async_get_calendar_event_from_bookings(event, hass.config.time_zone)
@@ -273,3 +271,107 @@ class Heitzfit4Calendar(CoordinatorEntity, CalendarEntity):
             for event in new_events
 
         ]
+    
+
+    # async def async_update(self) -> None:
+    #     """Update entity state with the next upcoming event."""
+    #     now = dt_util.now()
+    #     events = self._calendar.timeline_tz(now.tzinfo).active_after(now)
+    #     if event := next(events, None):
+    #         self._event = _get_calendar_event(event)
+    #     else:
+    #         self._event = None
+
+    async def _async_store(self) -> None:
+        """Persist the calendar to disk."""
+        content = IcsCalendarStream.calendar_to_ics(self._calendar)
+        await self._store.async_store(content)
+
+    # async def async_create_event(self, **kwargs: Any) -> None:
+    #     """Add a new event to calendar."""
+    #     event = _parse_event(kwargs)
+    #     async with self._calendar_lock:
+    #         event_store = EventStore(self._calendar)
+    #         await self.hass.async_add_executor_job(event_store.add, event)
+    #         await self._async_store()
+    #     await self.async_update_ha_state(force_refresh=True)
+
+    async def async_delete_event(
+        self,
+        uid: str,
+        recurrence_id: str | None = None,
+        recurrence_range: str | None = None,
+    ) -> None:
+        """Delete an event on the calendar."""
+        range_value: Range = Range.NONE
+        if recurrence_range == Range.THIS_AND_FUTURE:
+            range_value = Range.THIS_AND_FUTURE
+        async with self._calendar_lock:
+            try:
+                EventStore(self._calendar).delete(
+                    uid,
+                    recurrence_id=recurrence_id,
+                    recurrence_range=range_value,
+                )
+            except EventStoreError as err:
+                raise HomeAssistantError(f"Error while deleting event: {err}") from err
+            await self._async_store()
+        await self.async_update_ha_state(force_refresh=True)
+
+    async def async_update_event(
+        self,
+        uid: str,
+        event: dict[str, Any],
+        recurrence_id: str | None = None,
+        recurrence_range: str | None = None,
+    ) -> None:
+        """Update an existing event on the calendar."""
+        new_event = _parse_event(event)
+        range_value: Range = Range.NONE
+        if recurrence_range == Range.THIS_AND_FUTURE:
+            range_value = Range.THIS_AND_FUTURE
+
+        async with self._calendar_lock:
+            event_store = EventStore(self._calendar)
+
+            def apply_edit() -> None:
+                event_store.edit(
+                    uid,
+                    new_event,
+                    recurrence_id=recurrence_id,
+                    recurrence_range=range_value,
+                )
+
+            try:
+                await self.hass.async_add_executor_job(apply_edit)
+            except EventStoreError as err:
+                raise HomeAssistantError(f"Error while updating event: {err}") from err
+            await self._async_store()
+        await self.async_update_ha_state(force_refresh=True)
+
+
+
+def _parse_event(event: dict[str, Any]) -> Event:
+    """Parse an ical event from a home assistant event dictionary."""
+    if rrule := event.get(EVENT_RRULE):
+        event[EVENT_RRULE] = Recur.from_rrule(rrule)
+
+    # This function is called with new events created in the local timezone,
+    # however ical library does not properly return recurrence_ids for
+    # start dates with a timezone. For now, ensure any datetime is stored as a
+    # floating local time to ensure we still apply proper local timezone rules.
+    # This can be removed when ical is updated with a new recurrence_id format
+    # https://github.com/home-assistant/core/issues/87759
+    for key in (EVENT_START, EVENT_END):
+        if (
+            (value := event[key])
+            and isinstance(value, datetime)
+            and value.tzinfo is not None
+        ):
+            event[key] = dt_util.as_local(value).replace(tzinfo=None)
+
+    try:
+        return Event(**event)
+    except CalendarParseError as err:
+        _LOGGER.debug("Error parsing event input fields: %s (%s)", event, str(err))
+        raise vol.Invalid("Error parsing event input fields") from err

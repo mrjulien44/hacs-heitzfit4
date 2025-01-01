@@ -22,7 +22,7 @@ class Heitzfit4ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 vol.Required("club"): str,
                 vol.Required("username"): str,
                 vol.Required("password"): str,
-                vol.Required("nbdays", default=6): cv.positive_int
+                vol.Required("nbdays", default=8): cv.positive_int
             })
         )
 
