@@ -126,6 +126,7 @@ import logging
 
 
 import asyncio
+from typing import Any
 from ical.calendar import Calendar
 from ical.calendar_stream import IcsCalendarStream
 from ical.event import Event
