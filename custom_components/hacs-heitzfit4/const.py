@@ -2,7 +2,7 @@
 
 from homeassistant.const import Platform
 
-DOMAIN = "hacs-heitzfit4"
+DOMAIN = "heitzfit4"
 # EVENT_TYPE = "heitzfit4_event"
 
 CONF_NAME = "Heitzfit4"

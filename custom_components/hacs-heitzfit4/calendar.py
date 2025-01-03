@@ -30,7 +30,7 @@ async def async_setup_entry(
 
 @callback
 def async_get_calendar_event_from_bookings(planning_data, timezone) -> CalendarEvent:
-    """Get a HASS CalendarEvent from a Pronote Lesson."""
+    """Get a HASS CalendarEvent from Heitzfit4 booking."""
     tz = ZoneInfo(timezone)
     activity = planning_data
     return CalendarEvent(
