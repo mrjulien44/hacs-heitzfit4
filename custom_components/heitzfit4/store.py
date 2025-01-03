@@ -6,6 +6,7 @@ from pathlib import Path
 from homeassistant.core import HomeAssistant
 
 STORAGE_PATH = ".storage/{key}.ics"
+# STORAGE_PATH = ".storage/{key}.ics"
 
 
 class LocalCalendarStore:

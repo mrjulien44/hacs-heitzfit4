@@ -93,6 +93,10 @@ Sample for booking :
 ```
 ![heitzfit4 booking detail](doc/bookings.png)
 
+## Calendar
+
+Show your bookings in a dedicated calendar
+![heitzfit4 calendar view](doc/calendar.png)
 
 ## Removing the integration
 
