@@ -21,7 +21,7 @@ async def async_migrate_entry(hass, config_entry: ConfigEntry) -> bool:
     if config_entry.version == 1:
 
         new = {**config_entry.data}
-        new["connection_type"] = "username_password"
+        new["club"] = "club"
 
         config_entry.version = 2
         hass.config_entries.async_update_entry(config_entry, data=new)
@@ -47,7 +47,8 @@ async def async_setup_entry(
     hass.data.setdefault(DOMAIN, {})[entry.entry_id] = coordinator
 
     for platform in PLATFORMS:
-        hass.async_add_job(
+        await hass.async_add_executor_job(
+        # hass.async_add_job(
             hass.config_entries.async_forward_entry_setup(entry, platform)
         )
         _LOGGER.info("Forwarding entry setup for %s", platform)
