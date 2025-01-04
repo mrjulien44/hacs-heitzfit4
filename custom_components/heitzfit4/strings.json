@@ -24,8 +24,8 @@
   "options": {
     "step": {
       "init": {
-        "title": "Configuration de Heitzfit4",
-        "description": "Configuration de Heitzfit4",
+        "title": "Configuration des options Heitzfit4",
+        "description": "Configuration des options Heitzfit4",
         "data": {
           "club": "Club",
           "username": "Utilisateur",

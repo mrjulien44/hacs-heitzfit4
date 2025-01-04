@@ -30,8 +30,8 @@ class Heitzfit4ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     @callback
     # def async_get_options_flow(config_entry):
     def async_get_options_flow(config_entry: config_entries.ConfigEntry):
-        # return Heitzfit4OptionsFlowHandler(config_entry)
-        return OptionsFlowHandler()
+        return Heitzfit4OptionsFlowHandler(config_entry)
+        # return OptionsFlowHandler()
 
 
 class Heitzfit4OptionsFlowHandler(config_entries.OptionsFlow):
@@ -55,26 +55,26 @@ class Heitzfit4OptionsFlowHandler(config_entries.OptionsFlow):
             })
         )
 
-class OptionsFlowHandler():
-    """Handle Heitzfit4 options."""
+# class OptionsFlowHandler():
+#     """Handle Heitzfit4 options."""
 
-    # def __init__(self, config_entry):
-    #     self.config_entry = config_entry
-    @property
-    def config_entry(self):
-        return self.hass.config_entries.async_get_entry(self.handler)
+#     # def __init__(self, config_entry):
+#     #     self.config_entry = config_entry
+#     @property
+#     def config_entry(self):
+#         return self.hass.config_entries.async_get_entry(self.handler)
 
-    async def async_step_init(self, user_input=None):
-        """Manage the options."""
-        if user_input is not None:
-            return self.async_create_entry(title="", data=user_input)
+#     async def async_step_init(self, user_input=None):
+#         """Manage the options."""
+#         if user_input is not None:
+#             return self.async_create_entry(title="", data=user_input)
 
-        return self.async_show_form(
-            step_id="init",
-            data_schema=vol.Schema({
-                vol.Required("club", default=self.config_entry.data.get("club")): str,
-                vol.Required("username", default=self.config_entry.data.get("username")): str,
-                vol.Required("password", default=self.config_entry.data.get("password")): str,
-                vol.Required("nbdays", default=self.config_entry.data.get("nbdays")): str,
-            })
-        )
+#         return self.async_show_form(
+#             step_id="init",
+#             data_schema=vol.Schema({
+#                 vol.Required("club", default=self.config_entry.data.get("club")): str,
+#                 vol.Required("username", default=self.config_entry.data.get("username")): str,
+#                 vol.Required("password", default=self.config_entry.data.get("password")): str,
+#                 vol.Required("nbdays", default=self.config_entry.data.get("nbdays")): str,
+#             })
+#         )
