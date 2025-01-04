@@ -29,7 +29,7 @@ class Heitzfit4API:
     async def async_sign_in(self):
         async with aiohttp.ClientSession() as session:
             async with session.post(
-                "https://app.heitzfit.com/c/{self.club}/ws/api/auth/signin",
+                f"https://app.heitzfit.com/c/{self.club}/ws/api/auth/signin",
                 json={
                     "email": self.username,
                     "targetCenter": self.club,
